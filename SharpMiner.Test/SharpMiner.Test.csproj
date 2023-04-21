@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpMiner.csproj" />
+    <ProjectReference Include="..\SharpMiner\SharpMiner.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
