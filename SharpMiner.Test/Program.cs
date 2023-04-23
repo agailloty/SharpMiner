@@ -1,13 +1,18 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
+using MathNet.Numerics.LinearAlgebra.Double;
+using SharpMiner.Test;
 using System;
 
-    Func<Vector<double>, Vector<double>, Vector<double>> moyPtab = (V, poids) 
-    => (poids.PointwiseDivide(poids.Sum()) * Matrix<double>.Build.DenseOfColumnVectors(V)).ColumnSums();
 
-    var notes = new DenseVector<double> {10, 12, 14, 8, 10, 8};
-    var effectif = new DenseVector<double> {3, 10, 2, 5, 3, 1};
+var data = DenseMatrix.OfArray(new double[,]
+{
+    {1.0, 2.0, 3.0},
+    {4.0, 5.0, 6.0},
+    {7.0, 8.0, 9.0},
+    {10.0, 11.0, 12.0}
+});
 
-    var res = moyPtab(notes, effectif); 
+var pca = new PCA();
+var transformedData = pca.Transform(data, 2);
 
-    Console.WriteLine(res);
+Console.WriteLine(transformedData);
