@@ -3,6 +3,8 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using SharpMiner.Test;
 using MathNet.Numerics.Data.Text;
 using System;
+using static SharpMiner.Test.Utils;
+
 
 /*
 string csvFilePath = "indicators-headless.csv";
@@ -28,6 +30,6 @@ var m2 = DenseMatrix.OfArray(new double[,] {
     { 7.0, 8.0, 9.0, 5.0 }
 });
 
-var res = Utils.CrossProd(m1, m2);
+var res = CrossProd(m1, m2);
 
 Console.WriteLine(res);
