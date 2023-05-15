@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.Statistics;
 
 namespace SharpMiner.Test
 {
-
-
     public class PCA
     {
         private Matrix<double> CovarianceMatrix(Matrix<double> data)
@@ -52,6 +51,7 @@ namespace SharpMiner.Test
 
             return transformedData;
         }
+
 
 
     }

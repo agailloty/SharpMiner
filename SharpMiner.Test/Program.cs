@@ -31,5 +31,8 @@ var m2 = DenseMatrix.OfArray(new double[,] {
 });
 
 var res = CrossProd(m1, m2);
-
 Console.WriteLine(res);
+Console.WriteLine("Scaled and reduced");
+
+Console.WriteLine(ScaleAndReduce(m2));
+
