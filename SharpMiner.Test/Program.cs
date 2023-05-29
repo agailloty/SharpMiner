@@ -6,33 +6,14 @@ using System;
 using static SharpMiner.Test.Utils;
 
 
-/*
 string csvFilePath = "indicators-headless.csv";
 var data = DelimitedReader.Read<double>(csvFilePath, false, ",");
 
+var covmat = Utils.CovarianceMatrix(data);
 
+DelimitedWriter.Write("covmat.csv", covmat, ",");
 
-var pca = new PCA();
-var transformedData = pca.Transform(data, 10);
+var cormat = Utils.CorrelationMatrix(data);
 
-DelimitedWriter.Write("out.csv", transformedData, ",");
-*/
-
-var m1 = DenseMatrix.OfArray(new double[,] {
-    { 1.0, 2.0, 3.0 },
-    { 4.0, 5.0, 6.0 },
-    { 7.0, 8.0, 9.0 }
-});
-
-var m2 = DenseMatrix.OfArray(new double[,] {
-    { 1.0, 2.0, 3.0, 2.4 },
-    { 4.0, 5.0, 6.0, 4.0 },
-    { 7.0, 8.0, 9.0, 5.0 }
-});
-
-var res = CrossProd(m1, m2);
-Console.WriteLine(res);
-Console.WriteLine("Scaled and reduced");
-
-Console.WriteLine(ScaleAndReduce(m2));
+DelimitedWriter.Write("cormat.csv", cormat, ",");
 
