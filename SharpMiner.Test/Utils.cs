@@ -14,7 +14,7 @@ namespace SharpMiner.Test
             return (vector - vector.Mean()).Divide(vector.StandardDeviation());
         }
 
-        public static Matrix<double> ScaleAndReduce(Matrix matrix) 
+        public static Matrix<double> ScaleAndReduce(Matrix<double> matrix) 
         {
             Matrix<double> mat = new DenseMatrix(matrix.RowCount, matrix.ColumnCount);
             for (int i = 0; i < matrix.ColumnCount; i++)
@@ -34,8 +34,11 @@ namespace SharpMiner.Test
             return covmat;
         }
 
-        public static Matrix<double> CovarianceMatrix(Matrix<double> matrix) =>Covariate(matrix, Statistics.Covariance);
+        public static Matrix<double> CovarianceMatrix(Matrix<double> matrix) 
+                    => Covariate(matrix, Statistics.Covariance);
 
-        public static Matrix<double> CorrelationMatrix(Matrix<double> matrix) => Covariate(matrix, Correlation.Pearson);
+        public static Matrix<double> CorrelationMatrix(Matrix<double> matrix) 
+                    => Covariate(matrix, Correlation.Pearson);
+        
     }
 }
