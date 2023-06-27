@@ -6,13 +6,9 @@ namespace SharpMiner.Test
 {
     public static class Utils
     {
-        public static Matrix<double> CrossProd(Matrix<double> x, Matrix<double> y)
-        {
-            return x.Transpose().Multiply(y);
-        }
-        public static Vector<double> ScaleAndReduce(Vector<double> vector) {
-            return (vector - vector.Mean()).Divide(vector.StandardDeviation());
-        }
+        public static Matrix<double> CrossProd(Matrix<double> x, Matrix<double> y) => x.Transpose().Multiply(y);
+        public static Vector<double> ScaleAndReduce(Vector<double> vector) 
+            => (vector - vector.Mean()).Divide(vector.StandardDeviation());
 
         public static Matrix<double> ScaleAndReduce(Matrix<double> matrix) 
         {
@@ -39,6 +35,6 @@ namespace SharpMiner.Test
 
         public static Matrix<double> CorrelationMatrix(Matrix<double> matrix) 
                     => Covariate(matrix, Correlation.Pearson);
-        
+
     }
 }
