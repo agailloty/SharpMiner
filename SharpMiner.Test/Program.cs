@@ -4,11 +4,14 @@ using SharpMiner.Test;
 using MathNet.Numerics.Data.Text;
 using System;
 using static SharpMiner.Test.Utils;
+using System.Globalization;
 
+string csvFilePath = "indicators.csv";
+var provider =  new NumberFormatInfo { NumberDecimalSeparator = "."  };
 
-string csvFilePath = "indicators-headless.csv";
+var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", formatProvider: provider, hasHeaders: true);
+var analysis = new PCA(data);
 
-var analysis = new PCA(csvFilePath);
 analysis.Fit();
 
 DelimitedWriter.Write("scaled.csv", analysis.ScaledData, ",");

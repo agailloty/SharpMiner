@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Data.Text;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace SharpMiner.Test
@@ -13,14 +12,6 @@ namespace SharpMiner.Test
         private Matrix<double>? _covarianceMatrix;
         private Matrix<double>? _pearsonCorrelationMatrix;
         private Matrix<double>? _principalComponents;
-  
-
-        public PCA(string filepath)
-        {
-            ArgumentNullException.ThrowIfNullOrEmpty(filepath);
-            _data = DelimitedReader.Read<double>(filePath: filepath, delimiter:",");
-        }
-
         public PCA(Matrix<double> data) 
         {
             ArgumentNullException.ThrowIfNull(data);
