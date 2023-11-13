@@ -1,13 +1,9 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using SharpMiner.Test;
+﻿using SharpMiner.Test;
 using MathNet.Numerics.Data.Text;
-using System;
-using static SharpMiner.Test.Utils;
 using System.Globalization;
 
 string csvFilePath = "indicators.csv";
-var provider =  new NumberFormatInfo { NumberDecimalSeparator = "."  };
+var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
 var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", formatProvider: provider, hasHeaders: true);
 var analysis = new PCA(data);
