@@ -17,6 +17,7 @@ namespace SharpMiner.Test
         private Svd<double> _svd;
         private Matrix<double> _projections, _eigenvectors, _scores, _coefficients, _loadings;
         private int[] _orderedComponents;
+        private int _defaultComponents;
 
         public PrincipalComponentEstimator(Matrix<double> data, IEnumerable<double>? weights = null, int? ncomponents = null)
         {
@@ -46,8 +47,9 @@ namespace SharpMiner.Test
             _eigenvectors = _svd.VT;
 
             ncomponents ??= _ncols;
+            _defaultComponents = ncomponents.Value;
 
-            ComputePCA(ncomponents.Value);
+            ComputePCA(_defaultComponents);
         }
 
         public Matrix<double> Project(int? ncomponents = null)
@@ -58,7 +60,7 @@ namespace SharpMiner.Test
             if (ncomponents > _ncols)
                 throw new ArgumentException("ncomp must be smaller than the number of components computed.");
 
-            ncomponents ??= _ncols;
+            ncomponents ??= _defaultComponents;
 
             _projections = _data.Multiply(_eigenvectors);
             
