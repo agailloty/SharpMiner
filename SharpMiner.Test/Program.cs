@@ -6,12 +6,13 @@ string csvFilePath = "indicators.csv";
 var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
 var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", formatProvider: provider, hasHeaders: true);
-var analysis = new PCA(data);
 
-analysis.Fit();
+PrincipalComponentEstimator pca;
 
-DelimitedWriter.Write("scaled.csv", analysis.ScaledData, ",");
-DelimitedWriter.Write("cormat.csv", analysis.PearsonCorrelationMatrix, ",");
-DelimitedWriter.Write("prcomp.csv", analysis.PrincipalComponents, ",");
-DelimitedWriter.Write("evdmat.csv", analysis.EvdMatrix!.EigenVectors, ",");
-DelimitedWriter.Write("explainedVariance.csv", analysis.ExplainedVariance!.ToColumnMatrix(), ",");
+if (data != null)
+{
+    pca = new PrincipalComponentEstimator(data, ncomponents: 5);
+
+    var projections = pca.Project();
+}
+
