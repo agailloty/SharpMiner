@@ -7,12 +7,14 @@ var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
 var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", formatProvider: provider, hasHeaders: true);
 
-PrincipalComponentEstimator pca;
-
 if (data != null)
 {
-    pca = new PrincipalComponentEstimator(data, ncomponents: 5);
+    var pca = new PrincipalComponentEstimator(data, ncomponents: 5);
 
-    var projections = pca.Project();
+    DelimitedWriter.Write("projections.csv", pca.Scores, ";");
+
+    var secondPCA = new PCA(data);
+    secondPCA.Fit();
+    DelimitedWriter.Write("projections2.csv", secondPCA.PrincipalComponents, ";");
 }
 

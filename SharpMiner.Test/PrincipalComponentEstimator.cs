@@ -1,37 +1,41 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using MathNet.Numerics.LinearAlgebra.Factorization;
 using MathNet.Numerics.Statistics;
-using System.Collections.Immutable;
 
 namespace SharpMiner.Test
 {
     internal class PrincipalComponentEstimator
     {
-        private Matrix<double> _data;
-        private Vector<double> _weights;
-        private readonly int _nrows;
-        private readonly int _ncols;
-        private double _mu, _sigma, _rsquare;
-        private Vector<double> _eigenvalues;
-        private Svd<double> _svd;
-        private Matrix<double> _projections, _eigenvectors, _scores, _coefficients, _loadings;
-        private int[] _orderedComponents;
-        private int _defaultComponents;
+        private readonly Matrix<double> _data;
+        private readonly Vector<double> _weights;
+        private readonly int _defaultComponents;
 
+        public Vector<double>? EigenValues { get; }
+        public Matrix<double>? EigenVectors { get; }
+        public Matrix<double>? Scores { get; private set; }
+        public Matrix<double>? Projections { get; private set; }
+
+        public Matrix<double>? ScaledAndReducedData { get; }
+
+        /// <summary>
+        /// The steps to compute a PCA are the following : compute eignenvalues, compute principal components from the eigenvalues
+        /// and project
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="weights"></param>
+        /// <param name="ncomponents"></param>
+        /// <exception cref="ArgumentException"></exception>
         public PrincipalComponentEstimator(Matrix<double> data, IEnumerable<double>? weights = null, int? ncomponents = null)
         {
             ArgumentException.ThrowIfNullOrEmpty(nameof(data));
             _data = data;
-            _nrows = _data.RowCount;
-            _ncols = _data.ColumnCount;
             if (weights == null)
             {
-                _weights = DenseVector.Create(_nrows, 1.0);
+                _weights = DenseVector.Create(data.RowCount, 1.0);
             } 
             else
             {
-                if (weights.Count() != _nrows)
+                if (weights.Count() != data.RowCount)
                 {
                     throw new ArgumentException($"Weights should have {_data.RowCount} elements.");
                 }
@@ -41,15 +45,14 @@ namespace SharpMiner.Test
                 _weights.MapInplace(x => x / mean);
             }
 
-            _svd = data.Svd();
+            ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
 
-            _eigenvalues = _svd.S.PointwisePower(2.0);
-            _eigenvectors = _svd.VT;
+            (EigenVectors, EigenValues) =  ComputeEigen(ScaledAndReducedData);
 
-            ncomponents ??= _ncols;
+            ncomponents ??= data.ColumnCount;
             _defaultComponents = ncomponents.Value;
 
-            ComputePCA(_defaultComponents);
+            ComputePCAFromEigen();
         }
 
         public Matrix<double> Project(int? ncomponents = null)
@@ -57,25 +60,24 @@ namespace SharpMiner.Test
             if (ncomponents <= 0)
                 throw new ArgumentException("ncomponents must be greater than 0.");
 
-            if (ncomponents > _ncols)
+            if (ncomponents > _data.ColumnCount)
                 throw new ArgumentException("ncomp must be smaller than the number of components computed.");
 
-            ncomponents ??= _defaultComponents;
-
-            _projections = _data.Multiply(_eigenvectors);
+            Projections = ScaledAndReducedData.Multiply(EigenVectors);
             
-            return _projections;
+            return Projections;
         }
 
         private void ComputePCA(int ncomponents)
         {
-            Vector<double> eigenvalues = _eigenvalues;
-            _orderedComponents =  _eigenvalues.EnumerateIndexed()
+            if (EigenValues != null && EigenVectors != null)
+            {
+                var orderedComponents = EigenValues.EnumerateIndexed()
                 .OrderByDescending(x => x.Item2).Select(p => p.Item1).ToArray();
 
-            Matrix<double> eigenvectors = ReorderMatrix(_eigenvectors, _orderedComponents, ncomponents);
-            _scores = _data.Multiply(eigenvectors);
-            _loadings = eigenvectors;
+                Matrix<double> eigenvectors = ReorderMatrix(EigenVectors, orderedComponents, ncomponents);
+                Scores = ScaledAndReducedData!.Multiply(eigenvectors);
+            }
 
         }
 
@@ -97,5 +99,35 @@ namespace SharpMiner.Test
 
             return sortedMatrix;
         }
+
+        /// <summary>
+        /// Computes both Eigenvalues & Eigenvectors
+        /// </summary>
+        /// <returns></returns>
+        private static (Matrix<double>? eigenvectors, Vector<double>? eigenvalues) ComputeEigen(Matrix<double> data)
+        {
+            Matrix<double> eigenvectors = null;
+            Vector<double> eigenvalues = null;
+            var svd = data.Svd();
+            if (svd != null)
+            {
+                eigenvalues = svd.S.PointwisePower(2.0);
+                eigenvectors = svd.VT;
+            }
+
+            return (eigenvectors, eigenvalues);
+        }
+
+        private void ComputePCAFromEigen(bool normalize = true)
+        {
+            Scores = ScaledAndReducedData!.Multiply(EigenVectors);
+            if (normalize)
+            {
+                Vector<double> rootEigenvalues = EigenValues!.PointwisePower(0.5);
+                Scores = Scores.Divide(rootEigenvalues);
+            }
+        }
+
+
     }
 }
