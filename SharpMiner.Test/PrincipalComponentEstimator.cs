@@ -75,25 +75,6 @@ namespace SharpMiner.Test
         }
 
         /// <summary>
-        /// Reorder matrix based on the ordering computed eignenvalues
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <param name="ncomponents"></param>
-        /// <returns>A subset of the matrix where columns are reordered following the order by which the eigenvalues are sorted</returns>
-        private Matrix<double> ReorderMatrix(Matrix<double> matrix, int[] indices, int ncomponents)
-        {
-            // Set matrix columns order based on ordered eigenvalues 
-
-            indices = indices.Take(ncomponents).ToArray();
-            // If initial matrix is (n * p) and ncomp = 5 then we return a matrix (n * 5) where
-            // each column in ordered by the values of the eigenvalues
-            Matrix<double> sortedMatrix = DenseMatrix.Create(matrix.RowCount, ncomponents, 
-                (i, j) => matrix[i, indices[j]]);
-
-            return sortedMatrix;
-        }
-
-        /// <summary>
         /// Computes both Eigenvalues & Eigenvectors
         /// </summary>
         /// <returns></returns>

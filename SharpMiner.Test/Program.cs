@@ -13,8 +13,8 @@ if (data != null)
 
     DelimitedWriter.Write("projections.csv", pca.Projections, ";");
 
-    var secondPCA = new PCA(data);
-    secondPCA.Fit();
-    DelimitedWriter.Write("projections2.csv", secondPCA.PrincipalComponents, ";");
+    DelimitedWriter.Write("scores.csv", pca.Scores, ";");
+
+    DelimitedWriter.Write("coefficients.csv", pca.Coefficients, ";");
 }
 
