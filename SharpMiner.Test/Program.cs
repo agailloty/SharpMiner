@@ -11,7 +11,7 @@ if (data != null)
 {
     var pca = new PrincipalComponentEstimator(data, ncomponents: 5);
 
-    DelimitedWriter.Write("projections.csv", pca.Scores, ";");
+    DelimitedWriter.Write("projections.csv", pca.Projections, ";");
 
     var secondPCA = new PCA(data);
     secondPCA.Fit();

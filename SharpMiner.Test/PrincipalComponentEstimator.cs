@@ -10,12 +10,16 @@ namespace SharpMiner.Test
         private readonly Vector<double> _weights;
         private readonly int _defaultComponents;
 
+        #region Public properties
         public Vector<double>? EigenValues { get; }
         public Matrix<double>? EigenVectors { get; }
         public Matrix<double>? Scores { get; private set; }
         public Matrix<double>? Projections { get; private set; }
-
+        public Matrix<double>? Coefficients { get; private set; }
         public Matrix<double>? ScaledAndReducedData { get; }
+        public DatasetStatistics DatasetStatistics { get; }
+        #endregion
+
 
         /// <summary>
         /// The steps to compute a PCA are the following : compute eignenvalues, compute principal components from the eigenvalues
@@ -45,6 +49,8 @@ namespace SharpMiner.Test
                 _weights.MapInplace(x => x / mean);
             }
 
+            DatasetStatistics = new DatasetStatistics(data);
+
             ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
 
             (EigenVectors, EigenValues) =  ComputeEigen(ScaledAndReducedData);
@@ -66,19 +72,6 @@ namespace SharpMiner.Test
             Projections = ScaledAndReducedData.Multiply(EigenVectors);
             
             return Projections;
-        }
-
-        private void ComputePCA(int ncomponents)
-        {
-            if (EigenValues != null && EigenVectors != null)
-            {
-                var orderedComponents = EigenValues.EnumerateIndexed()
-                .OrderByDescending(x => x.Item2).Select(p => p.Item1).ToArray();
-
-                Matrix<double> eigenvectors = ReorderMatrix(EigenVectors, orderedComponents, ncomponents);
-                Scores = ScaledAndReducedData!.Multiply(eigenvectors);
-            }
-
         }
 
         /// <summary>
@@ -121,13 +114,19 @@ namespace SharpMiner.Test
         private void ComputePCAFromEigen(bool normalize = true)
         {
             Scores = ScaledAndReducedData!.Multiply(EigenVectors);
+            Coefficients = EigenVectors!.Transpose();
+            Projections = Scores.Multiply(Coefficients);
             if (normalize)
             {
                 Vector<double> rootEigenvalues = EigenValues!.PointwisePower(0.5);
-                Scores = Scores.Divide(rootEigenvalues);
+                Scores = Scores.DivideByVector(rootEigenvalues);
+                Coefficients = Coefficients.Transpose()
+                    .MultiplyByVector(rootEigenvalues).Transpose();
+
+                var std = DenseVector.Build.DenseOfArray(DatasetStatistics.StandardDeviations);
+
+                Projections = Projections.MultiplyByVector(std);
             }
         }
-
-
     }
 }
