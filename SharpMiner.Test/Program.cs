@@ -11,6 +11,8 @@ if (data != null)
 {
     var pca = new PrincipalComponentEstimator(data, ncomponents: 5);
 
+    DelimitedWriter.Write(filePath: "ScaledAndReduced.csv", pca.ScaledAndReducedData);
+
     DelimitedWriter.Write("projections.csv", pca.Projections, ";");
 
     DelimitedWriter.Write("scores.csv", pca.Scores, ";");

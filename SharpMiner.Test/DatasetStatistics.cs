@@ -22,7 +22,7 @@ namespace SharpMiner.Test
         private void ComputeStatistics(Matrix<double> data)
         {
             StandardDeviations =  data.ToColumnArrays()
-                .Select(col => col.StandardDeviation())
+                .Select(col => col.PopulationStandardDeviation())
                 .ToArray();
 
             Means = data.ToColumnArrays()

@@ -58,7 +58,7 @@ namespace SharpMiner.Test
             ncomponents ??= data.ColumnCount;
             _defaultComponents = ncomponents.Value;
 
-            ComputePCAFromEigen();
+            ComputePCAFromEigen(normalize: false);
         }
 
         public Matrix<double> Project(int? ncomponents = null)
@@ -94,7 +94,7 @@ namespace SharpMiner.Test
 
         private void ComputePCAFromEigen(bool normalize = true)
         {
-            Scores = ScaledAndReducedData!.Multiply(EigenVectors);
+            Scores = ScaledAndReducedData.Multiply(EigenVectors.Transpose());
             Coefficients = EigenVectors!.Transpose();
             Projections = Scores.Multiply(Coefficients);
             if (normalize)

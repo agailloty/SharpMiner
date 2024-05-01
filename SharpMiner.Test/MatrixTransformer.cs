@@ -31,13 +31,10 @@ public class MatrixTransformer
 
     public static double[] ScaleAndReduce(double[] array)
     {
-        var (mean, std) = array.MeanStandardDeviation();
+        var mean = array.Mean();
+        var std = array.PopulationStandardDeviation();
         return array.Select(x => x -  mean).Select(x => x / std).ToArray();
     }
-
-    
-    private static Vector<double> ScaleAndReduce(Vector<double> vector) 
-        => (vector - vector.Mean()).Divide(vector.StandardDeviation());
 
     private static Vector<double> ComputeMeans(Matrix<double> matrix)
     {
