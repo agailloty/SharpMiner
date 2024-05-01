@@ -1,12 +1,12 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 using MathNet.Numerics.Statistics;
 
 namespace SharpMiner.Test
 {
     internal class PrincipalComponentEstimator
     {
-        private readonly Matrix<double> _data;
         private readonly Vector<double> _weights;
         private readonly int _defaultComponents;
 
@@ -18,6 +18,12 @@ namespace SharpMiner.Test
         public Matrix<double>? Coefficients { get; private set; }
         public Matrix<double>? ScaledAndReducedData { get; }
         public DatasetStatistics DatasetStatistics { get; }
+
+        public Matrix<double> Dataset {  get; }
+        public Svd<double>? Svd { get; }
+        public FactorResults ColumnsResults { get; private set; }
+        public FactorResults RowResults { get; private set; }
+
         #endregion
 
 
@@ -32,7 +38,7 @@ namespace SharpMiner.Test
         public PrincipalComponentEstimator(Matrix<double> data, IEnumerable<double>? weights = null, int? ncomponents = null)
         {
             ArgumentException.ThrowIfNullOrEmpty(nameof(data));
-            _data = data;
+            Dataset = data;
             if (weights == null)
             {
                 _weights = DenseVector.Create(data.RowCount, 1.0);
@@ -41,7 +47,7 @@ namespace SharpMiner.Test
             {
                 if (weights.Count() != data.RowCount)
                 {
-                    throw new ArgumentException($"Weights should have {_data.RowCount} elements.");
+                    throw new ArgumentException($"Weights should have {Dataset.RowCount} elements.");
                 }
 
                 _weights = new DenseVector(weights.ToArray());
@@ -66,7 +72,7 @@ namespace SharpMiner.Test
             if (ncomponents <= 0)
                 throw new ArgumentException("ncomponents must be greater than 0.");
 
-            if (ncomponents > _data.ColumnCount)
+            if (ncomponents > Dataset.ColumnCount)
                 throw new ArgumentException("ncomp must be smaller than the number of components computed.");
 
             Projections = ScaledAndReducedData.Multiply(EigenVectors);
@@ -86,7 +92,7 @@ namespace SharpMiner.Test
             if (svd != null)
             {
                 eigenvalues = svd.S.PointwisePower(2.0);
-                eigenvectors = svd.VT;
+                eigenvectors = svd.VT.Transpose();
             }
 
             return (eigenvectors, eigenvalues);
@@ -94,8 +100,8 @@ namespace SharpMiner.Test
 
         private void ComputePCAFromEigen(bool normalize = true)
         {
-            Scores = ScaledAndReducedData.Multiply(EigenVectors.Transpose());
-            Coefficients = EigenVectors!.Transpose();
+            Scores = ScaledAndReducedData.Multiply(EigenVectors);
+            Coefficients = EigenVectors;
             Projections = Scores.Multiply(Coefficients);
             if (normalize)
             {
@@ -108,6 +114,42 @@ namespace SharpMiner.Test
 
                 Projections = Projections.MultiplyByVector(std);
             }
+            SetRowsAndColumnsStatistics(Scores);
+        }
+
+        private void SetRowsAndColumnsStatistics(Matrix<double> scores)
+        {
+            if (scores != null)
+            {
+                var stats = ComputeStatistics(scores);
+                RowResults = stats.Rows;
+                ColumnsResults = stats.Columns;
+            }
+        }
+
+        private (FactorResults Rows, FactorResults Columns) ComputeStatistics(Matrix<double> scores)
+        {
+            Matrix<double> rowCoordinates = scores;
+            Matrix<double> rowSquaredCosinus = scores.PointwiseMultiply(rowCoordinates);
+
+            var columnCoordinates = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
+            var columnsSquaredCosinus = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
+
+            for (int scoreIndex = 0; scoreIndex < scores.ColumnCount; scoreIndex++)
+            {
+                for (int datasetIndex = 0; datasetIndex < scores.ColumnCount; datasetIndex++)
+                {
+                    double corcoeff = Correlation.Pearson(scores.Column(scoreIndex), Dataset.Column(datasetIndex));
+                    columnCoordinates[scoreIndex, datasetIndex] = corcoeff;
+                    columnsSquaredCosinus[scoreIndex, datasetIndex] = Math.Pow(corcoeff, 2); 
+                }
+            }
+
+            var rows = new FactorResults(rowCoordinates, rowSquaredCosinus, scores);
+
+            var columns = new FactorResults(columnCoordinates, columnsSquaredCosinus, scores);
+
+            return (rows, columns);
         }
     }
 }

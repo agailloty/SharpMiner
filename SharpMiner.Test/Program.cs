@@ -11,12 +11,10 @@ if (data != null)
 {
     var pca = new PrincipalComponentEstimator(data, ncomponents: 5);
 
-    DelimitedWriter.Write(filePath: "ScaledAndReduced.csv", pca.ScaledAndReducedData);
+    DelimitedWriter.Write(filePath: "columnCoordinates.csv", pca.ColumnsResults.Coordinates);
+    DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", pca.ColumnsResults.SquaredCosinus);
 
-    DelimitedWriter.Write("projections.csv", pca.Projections, ";");
-
-    DelimitedWriter.Write("scores.csv", pca.Scores, ";");
-
-    DelimitedWriter.Write("coefficients.csv", pca.Coefficients, ";");
+    DelimitedWriter.Write(filePath: "rowCoordinates.csv", pca.RowResults.Coordinates);
+    DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", pca.RowResults.SquaredCosinus);
 }
 
