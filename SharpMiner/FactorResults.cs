@@ -1,8 +1,8 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 
-namespace SharpMiner.Test
+namespace SharpMiner
 {
-    internal class FactorResults
+    public class FactorResults
     {
         public FactorResults(Matrix<double> coordinates, Matrix<double> squaredCosinus, Matrix<double> contributions) 
         { 

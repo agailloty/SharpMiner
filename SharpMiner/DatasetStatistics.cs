@@ -1,7 +1,9 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System.Linq;
+
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Statistics;
 
-namespace SharpMiner.Test
+namespace SharpMiner
 {
     public class DatasetStatistics
     {

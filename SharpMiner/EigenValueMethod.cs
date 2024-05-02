@@ -1,4 +1,4 @@
-﻿namespace SharpMiner.Test
+﻿namespace SharpMiner
 {
     internal enum EigenValueMethod
     {

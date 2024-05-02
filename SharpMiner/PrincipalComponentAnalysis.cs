@@ -1,31 +1,34 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 using MathNet.Numerics.Statistics;
 
-namespace SharpMiner.Test
+namespace SharpMiner
 {
-    internal class PrincipalComponentEstimator
+    public class PrincipalComponentAnalysis
     {
         private readonly Vector<double> _weights;
         private readonly int _defaultComponents;
 
         #region Public properties
-        public Vector<double>? EigenValues { get; }
-        public Matrix<double>? EigenVectors { get; }
-        public Matrix<double>? Scores { get; private set; }
-        public Matrix<double>? Projections { get; private set; }
-        public Matrix<double>? Coefficients { get; private set; }
-        public Matrix<double>? ScaledAndReducedData { get; }
+        public Vector<double> EigenValues { get; }
+        public Matrix<double> EigenVectors { get; }
+        public Matrix<double> Scores { get; private set; }
+        public Matrix<double> Projections { get; private set; }
+        public Matrix<double> Coefficients { get; private set; }
+        public Matrix<double> ScaledAndReducedData { get; }
         public DatasetStatistics DatasetStatistics { get; }
 
         public Matrix<double> Dataset {  get; }
-        public Svd<double>? Svd { get; }
+        public Svd<double> Svd { get; }
         public FactorResults ColumnsResults { get; private set; }
         public FactorResults RowResults { get; private set; }
 
         #endregion
-
 
         /// <summary>
         /// The steps to compute a PCA are the following : compute eignenvalues, compute principal components from the eigenvalues
@@ -35,9 +38,9 @@ namespace SharpMiner.Test
         /// <param name="weights"></param>
         /// <param name="ncomponents"></param>
         /// <exception cref="ArgumentException"></exception>
-        public PrincipalComponentEstimator(Matrix<double> data, IEnumerable<double>? weights = null, int? ncomponents = null)
+        public PrincipalComponentAnalysis(Matrix<double> data, IEnumerable<double> weights = null, int? ncomponents = null)
         {
-            ArgumentException.ThrowIfNullOrEmpty(nameof(data));
+            if (data == null) throw new ArgumentNullException(nameof(data));
             Dataset = data;
             if (weights == null)
             {
@@ -61,7 +64,9 @@ namespace SharpMiner.Test
 
             (EigenVectors, EigenValues) =  ComputeEigen(ScaledAndReducedData);
 
-            ncomponents ??= data.ColumnCount;
+            if (ncomponents ==null)
+                ncomponents = data.ColumnCount;
+
             _defaultComponents = ncomponents.Value;
 
             ComputePCAFromEigen(normalize: false);
@@ -84,7 +89,7 @@ namespace SharpMiner.Test
         /// Computes both Eigenvalues & Eigenvectors
         /// </summary>
         /// <returns></returns>
-        private static (Matrix<double>? eigenvectors, Vector<double>? eigenvalues) ComputeEigen(Matrix<double> data)
+        private static (Matrix<double> eigenvectors, Vector<double> eigenvalues) ComputeEigen(Matrix<double> data)
         {
             Matrix<double> eigenvectors = null;
             Vector<double> eigenvalues = null;
@@ -105,7 +110,7 @@ namespace SharpMiner.Test
             Projections = Scores.Multiply(Coefficients);
             if (normalize)
             {
-                Vector<double> rootEigenvalues = EigenValues!.PointwisePower(0.5);
+                Vector<double> rootEigenvalues = EigenValues.PointwisePower(0.5);
                 Scores = Scores.DivideByVector(rootEigenvalues);
                 Coefficients = Coefficients.Transpose()
                     .MultiplyByVector(rootEigenvalues).Transpose();
