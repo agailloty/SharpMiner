@@ -42,11 +42,26 @@ namespace SharpMiner
             return res;
         }
 
-        public static Matrix<double> MultiplyByVector(this Matrix<double> matrix, Vector<double> vector)
+        public static Matrix<double> MultiplyByColumnVector(this Matrix<double> matrix, Vector<double> vector)
         {
             // Make sure matrix columns count is equal to vector length
             if (matrix.ColumnCount != vector.Count)
-                throw new ArgumentException("Matrix column count should be equal to the divisor count");
+                throw new ArgumentException("Matrix columns count should be equal to the length of multiplier vector");
+
+            // Create a matrix of same size as the current matrix based on the vector
+
+            Matrix<double> divisorMatrix = Matrix<double>.Build.Dense(matrix.RowCount, matrix.ColumnCount, (i, j) => vector[j]);
+
+            var res = matrix.PointwiseMultiply(divisorMatrix);
+            return res;
+
+        }
+
+        public static Matrix<double> MultiplyByRowVector(this Matrix<double> matrix, Vector<double> vector)
+        {
+            // Make sure matrix columns count is equal to vector length
+            if (matrix.RowCount != vector.Count)
+                throw new ArgumentException("Matrix rows count should be equal to the length of multiplier vector");
 
             // Create a matrix of same size as the current matrix based on the vector
 

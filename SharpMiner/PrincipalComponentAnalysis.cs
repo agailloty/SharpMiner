@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -20,7 +19,7 @@ namespace SharpMiner
         public Matrix<double> Scores { get; private set; }
         public Matrix<double> Projections { get; private set; }
         public Matrix<double> Coefficients { get; private set; }
-        public Matrix<double> ScaledAndReducedData { get; }
+        
         public DatasetStatistics DatasetStatistics { get; }
 
         public Matrix<double> Dataset {  get; }
@@ -41,28 +40,10 @@ namespace SharpMiner
         public PrincipalComponentAnalysis(Matrix<double> data, IEnumerable<double> weights = null, int? ncomponents = null)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
-            Dataset = data;
-            if (weights == null)
-            {
-                _weights = DenseVector.Create(data.RowCount, 1.0);
-            } 
-            else
-            {
-                if (weights.Count() != data.RowCount)
-                {
-                    throw new ArgumentException($"Weights should have {Dataset.RowCount} elements.");
-                }
-
-                _weights = new DenseVector(weights.ToArray());
-                double mean = ArrayStatistics.Mean(_weights.PointwisePower(2).ToArray());
-                _weights.MapInplace(x => x / mean);
-            }
 
             DatasetStatistics = new DatasetStatistics(data);
 
-            ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
-
-            (EigenVectors, EigenValues) =  ComputeEigen(ScaledAndReducedData);
+            (EigenVectors, EigenValues) =  ComputeEigen(DatasetStatistics.ScaledAndReducedData);
 
             if (ncomponents ==null)
                 ncomponents = data.ColumnCount;
@@ -70,19 +51,6 @@ namespace SharpMiner
             _defaultComponents = ncomponents.Value;
 
             ComputePCAFromEigen(normalize: false);
-        }
-
-        public Matrix<double> Project(int? ncomponents = null)
-        {
-            if (ncomponents <= 0)
-                throw new ArgumentException("ncomponents must be greater than 0.");
-
-            if (ncomponents > Dataset.ColumnCount)
-                throw new ArgumentException("ncomp must be smaller than the number of components computed.");
-
-            Projections = ScaledAndReducedData.Multiply(EigenVectors);
-            
-            return Projections;
         }
 
         /// <summary>
@@ -105,7 +73,7 @@ namespace SharpMiner
 
         private void ComputePCAFromEigen(bool normalize = true)
         {
-            Scores = ScaledAndReducedData.Multiply(EigenVectors);
+            Scores = DatasetStatistics.ScaledAndReducedData.Multiply(EigenVectors);
             Coefficients = EigenVectors;
             Projections = Scores.Multiply(Coefficients);
             if (normalize)
@@ -113,11 +81,11 @@ namespace SharpMiner
                 Vector<double> rootEigenvalues = EigenValues.PointwisePower(0.5);
                 Scores = Scores.DivideByVector(rootEigenvalues);
                 Coefficients = Coefficients.Transpose()
-                    .MultiplyByVector(rootEigenvalues).Transpose();
+                    .MultiplyByColumnVector(rootEigenvalues).Transpose();
 
-                var std = DenseVector.Build.DenseOfArray(DatasetStatistics.StandardDeviations);
+                var std = DenseVector.Build.DenseOfArray(DatasetStatistics.ColumnStandardDeviations);
 
-                Projections = Projections.MultiplyByVector(std);
+                Projections = Projections.MultiplyByColumnVector(std);
             }
             SetRowsAndColumnsStatistics(Scores);
         }
@@ -135,7 +103,7 @@ namespace SharpMiner
         private (FactorResults Rows, FactorResults Columns) ComputeStatistics(Matrix<double> scores)
         {
             Matrix<double> rowCoordinates = scores;
-            Matrix<double> rowSquaredCosinus = scores.PointwiseMultiply(rowCoordinates);
+            Matrix<double> rowSquaredCosinus = scores.PointwiseMultiply(scores);
 
             var columnCoordinates = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
             var columnsSquaredCosinus = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
