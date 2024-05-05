@@ -10,16 +10,14 @@ namespace SharpMiner
     public class DatasetStatistics
     {
         public double[] RowMeans { get; private set; }
+        public double[] RowInertia { get; private set; }
+        public double[] RowWeights { get; private set; }
+        public double[] RowsEuclidianDistance { get; private set; }
+        internal double[] SquaredRowWeights { get; private set; }
         public double[] ColumnMeans { get; private set; }
         public double[] ColumnStandardDeviations { get; private set; }
-
-        public double[] RowsEuclidianDistance { get; private set; }
-
-        public double[] RowInertia { get; private set; }
-
-        public double[] RowWeights {  get; private set; }
-
         public double[] ColumnWeights { get; private set; }
+        internal double[] SquaredColumnWeights { get; private set; }
 
         public Matrix<double> ScaledAndReducedData { get; }
 
@@ -46,7 +44,9 @@ namespace SharpMiner
             ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
 
             RowWeights = rweights;
+            SquaredRowWeights = rweights.ToVector().PointwisePower(0.5).ToArray();
             ColumnWeights = cweights;
+            SquaredColumnWeights = cweights.ToVector().PointwisePower(0.5).ToArray();
 
             ComputeStatistics(data);
 

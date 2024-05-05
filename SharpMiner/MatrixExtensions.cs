@@ -42,6 +42,20 @@ namespace SharpMiner
             return res;
         }
 
+        public static Matrix<double> DivideByRowVector(this Matrix<double> matrix, Vector<double> divisor)
+        {
+            // Make sure matrix columns count is equal to vector length
+            if (matrix.RowCount != divisor.Count)
+                throw new ArgumentException("Matrix row count should be equal to the divisor count");
+
+            // Create a matrix of same size as the current matrix based on the vector
+
+            Matrix<double> divisorMatrix = Matrix<double>.Build.Dense(matrix.RowCount, matrix.ColumnCount, (i, j) => divisor[i]);
+
+            var res = matrix.PointwiseDivide(divisorMatrix);
+            return res;
+        }
+
         public static Matrix<double> MultiplyByColumnVector(this Matrix<double> matrix, Vector<double> vector)
         {
             // Make sure matrix columns count is equal to vector length
