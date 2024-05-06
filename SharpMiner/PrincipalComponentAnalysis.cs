@@ -101,6 +101,14 @@ namespace SharpMiner
 
         private (FactorResults Rows, FactorResults Columns) ComputeStatistics(Matrix<double> scores)
         {
+            Vector<double> weighedEigenvalues = DenseMatrix.Build.Dense(Dataset.RowCount, Dataset.ColumnCount, 1.0)
+                .MultiplyByColumnVector(DatasetStatistics.SquaredColumnWeights.ToVector())
+                .Transpose()
+                .MultiplyByColumnVector(DatasetStatistics.SquaredRowWeights.ToVector())
+                .RowSums();
+
+            weighedEigenvalues = Svd.S
+                .PointwiseDivide(weighedEigenvalues);
 
             var columnCoordinates = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
             var columnsSquaredCosinus = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
@@ -111,9 +119,17 @@ namespace SharpMiner
                 {
                     double corcoeff = Correlation.Pearson(scores.Column(scoreIndex), Dataset.Column(datasetIndex));
                     columnCoordinates[scoreIndex, datasetIndex] = corcoeff;
-                    columnsSquaredCosinus[scoreIndex, datasetIndex] = Math.Pow(corcoeff, 2); 
+                    columnsSquaredCosinus[scoreIndex, datasetIndex] = Math.Pow(corcoeff, 2);
                 }
             }
+
+            Vector<double> weighedEigenvaluesSquared = weighedEigenvalues.PointwisePower(2);
+
+            Matrix<double> columnsContributions = columnsSquaredCosinus
+                .Multiply(100)
+                .MultiplyByColumnVector(DatasetStatistics.ColumnWeights.ToVector())
+                .DivideByVector(weighedEigenvaluesSquared);
+
 
             Matrix<double> rowCoordinates = scores;
             Matrix<double> rowCoordinatesSquared = scores.PointwisePower(2);
@@ -121,25 +137,15 @@ namespace SharpMiner
             Matrix<double> rowSquaredCosinus =  rowCoordinatesSquared
                 .DivideByRowVector(DatasetStatistics.RowsEuclidianDistance.ToVector());
 
-            Vector<double> weighedEigenvalues = DenseMatrix.Build.Dense(Dataset.RowCount, Dataset.ColumnCount, 1.0)
-                .MultiplyByColumnVector(DatasetStatistics.SquaredColumnWeights.ToVector())
-                .Transpose()
-                .MultiplyByColumnVector(DatasetStatistics.SquaredRowWeights.ToVector())
-                .RowSums();
 
-            weighedEigenvalues = Svd.S
-                .PointwiseDivide(weighedEigenvalues)
-                .PointwisePower(2);
-
-
-            var rowContribution = rowCoordinatesSquared
+            Matrix<double> rowContribution = rowCoordinatesSquared
                 .Multiply(100)
                 .MultiplyByRowVector(DatasetStatistics.RowWeights.ToVector())
-                .DivideByVector(weighedEigenvalues);
+                .DivideByVector(weighedEigenvaluesSquared);
 
-            var rows = new FactorResults(rowCoordinates, rowSquaredCosinus, rowContribution);
+            FactorResults rows = new FactorResults(rowCoordinates, rowSquaredCosinus, rowContribution);
 
-            var columns = new FactorResults(columnCoordinates, columnsSquaredCosinus, scores);
+            FactorResults columns = new FactorResults(columnCoordinates, columnsSquaredCosinus, columnsContributions);
 
             return (rows, columns);
         }

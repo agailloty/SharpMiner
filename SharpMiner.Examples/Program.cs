@@ -13,8 +13,10 @@ if (data != null)
 
     DelimitedWriter.Write(filePath: "columnCoordinates.csv", pca.ColumnsResults.Coordinates);
     DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", pca.ColumnsResults.SquaredCosinus);
+    DelimitedWriter.Write(filePath: "columnContributions.csv", pca.ColumnsResults.Contributions);
 
     DelimitedWriter.Write(filePath: "rowCoordinates.csv", pca.RowResults.Coordinates);
     DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", pca.RowResults.SquaredCosinus);
+    DelimitedWriter.Write(filePath: "rowContributions.csv", pca.RowResults.Contributions);
 }
 
