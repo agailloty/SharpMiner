@@ -1,0 +1,8 @@
+- name: Introduction
+  href: introduction.md
+- name: Getting Started
+  href: getting-started.md
+- name: About the project
+  href: project.md
+- name: Compute principal components
+  href: compute-pca.md
