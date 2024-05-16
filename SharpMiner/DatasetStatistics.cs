@@ -51,6 +51,8 @@ namespace SharpMiner
         /// </summary>
         public Matrix<double> ScaledAndReducedData { get; }
 
+        public Matrix<double> CorrelationMatrix { get; }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetStatistics"/> class with the specified data, row weights, and column weights.
@@ -76,6 +78,8 @@ namespace SharpMiner
             {
                 cweights = Generate.Repeat(data.ColumnCount, 1.0);
             }
+
+            CorrelationMatrix = Correlation.PearsonMatrix(data.ToColumnArrays());
 
             ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
 
