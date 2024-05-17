@@ -20,10 +20,16 @@ if (data != null)
     DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", pca.RowResults.SquaredCosinus);
     DelimitedWriter.Write(filePath: "rowContributions.csv", pca.RowResults.Contributions);
 
-    var plot = Visualisations.ScreePlot(new double[] { 35, 25, 17, 11, 7, 3 });
+    var plot = Visualisations.ScreePlot([35, 25, 17, 11, 7, 3]);
     plot.SavePng("scrreplot.png", 800, 600);
 
-    var correlationCircle = Visualisations.CorrelationCircle(pca.DatasetStatistics.CorrelationMatrix);
+    var correlations = new (double, double)[] {(0.890168764861295, 0.3608298881130253),
+        (-0.46014270644790806, 0.8827162691623838),
+        (0.9915551834193608, 0.023415188379166344),
+        (0.9649789606692489, 0.06399984704374741)
+    };
+
+    var correlationCircle = Visualisations.CorrelationCircle(correlations);
 
     correlationCircle.SavePng("correlationCirlce.png", 800, 800);
 
