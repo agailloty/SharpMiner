@@ -31,7 +31,7 @@ namespace SharpMiner
         /// <summary>
         /// Gets the squared weights assigned to each row in the dataset.
         /// </summary>
-        internal double[] SquaredRowWeights { get; private set; }
+        internal double[] RootSquaredRowWeights { get; private set; }
         /// <summary>
         /// Gets the mean value for each column in the dataset.
         /// </summary>
@@ -52,6 +52,10 @@ namespace SharpMiner
         public Matrix<double> ScaledAndReducedData { get; }
 
         public Matrix<double> CorrelationMatrix { get; }
+
+        public Matrix<double> WeighedDataset { get; }
+
+        protected Matrix<double> DemeanedData { get; }
 
 
         /// <summary>
@@ -74,48 +78,76 @@ namespace SharpMiner
                 rweights = Generate.Repeat(data.RowCount, rweight);
             }
 
+            RowWeights = rweights;
+
             if (cweights is null)
             {
                 cweights = Generate.Repeat(data.ColumnCount, 1.0);
             }
 
+            ColumnWeights = cweights;
+
+            (ColumnMeans, ColumnStandardDeviations) = ComputeStatistics(data);
+
             CorrelationMatrix = Correlation.PearsonMatrix(data.ToColumnArrays());
 
-            ScaledAndReducedData = new MatrixTransformer(data).ScaledAndReduced;
+            ScaledAndReducedData = ComputeReducedAndScaledDataset(data, rweights);
 
-            RowWeights = rweights;
-            SquaredRowWeights = rweights.ToVector().PointwisePower(0.5).ToArray();
-            ColumnWeights = cweights;
+            RowsEuclidianDistance = ScaledAndReducedData
+            .PointwisePower(2.0)
+            .MultiplyByColumnVector(ColumnWeights.ToVector())
+            .ToRowArrays()
+            .Select(r => r.Sum())
+            .ToArray();
+
+            RowInertia = RowsEuclidianDistance
+                        .Select((x, i) => x * RowWeights[i])
+                        .ToArray();
+
+            RootSquaredRowWeights = rweights.ToVector().PointwisePower(0.5).ToArray();
+
+            WeighedDataset = ScaledAndReducedData.MultiplyByRowVector(RootSquaredRowWeights.ToVector());
+            
             SquaredColumnWeights = cweights.ToVector().PointwisePower(0.5).ToArray();
-
-            ComputeStatistics(data);
 
         }
 
-        private void ComputeStatistics(Matrix<double> data)
+        private static (double[] colStd, double[] colMeans) ComputeStatistics(Matrix<double> data)
         {
-            ColumnStandardDeviations =  data.ToColumnArrays()
+            double[] colStd =  data.ToColumnArrays()
                 .Select(col => col.PopulationStandardDeviation())
                 .ToArray();
 
-            ColumnMeans = data.ToColumnArrays()
+            double[] colMeans = data.ToColumnArrays()
                 .Select(col => col.Mean())
                 .ToArray();
 
-            RowMeans = data.ToRowArrays()
-                .Select(col => col.Mean())
-                .ToArray();
+            return (colStd, colMeans);
+        }
 
-            RowsEuclidianDistance = ScaledAndReducedData
-                .PointwisePower(2.0)
-                .MultiplyByColumnVector(ColumnWeights.ToVector())
-                .ToRowArrays()
-                .Select(r => r.Sum())
-                .ToArray();
+        private static Matrix<double> ComputeReducedAndScaledDataset(Matrix<double> data, double[] rweights)
+        {
 
-            RowInertia = RowsEuclidianDistance
-                .Select((x, i) => x * RowWeights[i])
-                .ToArray();
+            // Multiply each row in the dataset by its weights
+
+            Matrix<double> rowWeights = Matrix<double>.Build.DenseOfRowArrays(rweights)
+                .Divide(rweights.Sum());
+
+            Matrix<double> centers = rowWeights
+                .Multiply(data);
+
+            Matrix<double> deviations = rowWeights
+                .Multiply(data.PointwisePower(2.0))
+                .PointwisePower(0.5);
+
+            // Center and reduce the dataset : for each column, substract the value by the mean
+            // Divide each column by its deviation
+
+            Matrix<double> result = data
+                .AddColumnVector(centers.Row(0), AddOperation.Subtraction)
+                .DivideByVector(deviations.Row(0));
+
+            return result;
         }
     }
 }

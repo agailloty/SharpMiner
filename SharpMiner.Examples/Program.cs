@@ -20,9 +20,13 @@ if (data != null)
     DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", pca.RowResults.SquaredCosinus);
     DelimitedWriter.Write(filePath: "rowContributions.csv", pca.RowResults.Contributions);
 
-    var plot = Visualisations.ScreePlot([35, 25, 17, 11, 7, 3]);
-    plot.SavePng("scrreplot.png", 800, 600);
+    DelimitedWriter.Write(filePath: "Eigenvectors.csv", pca.EigenVectors);
 
+    DelimitedWriter.Write(filePath: "ScaledReducedData.csv", pca.DatasetStatistics.ScaledAndReducedData);
+
+    var plot = Visualisations.ScreePlot([29.96, 23.16, 17, 11.6, 7, 3]);
+    plot.SavePng("scrreplot.png", 800, 600);
+    
     var correlations = new (double, double)[] {(0.890168764861295, 0.3608298881130253),
         (-0.46014270644790806, 0.8827162691623838),
         (0.9915551834193608, 0.023415188379166344),
@@ -30,8 +34,10 @@ if (data != null)
     };
 
     var correlationCircle = Visualisations.CorrelationCircle(correlations);
-
     correlationCircle.SavePng("correlationCirlce.png", 800, 800);
+
+    var firstAxis =  pca.ColumnsResults.Coordinates.ToRowArrays()
+        .Select(col => (col[0], col[1])).ToArray();
 
 }
 

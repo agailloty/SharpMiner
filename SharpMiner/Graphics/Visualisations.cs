@@ -2,7 +2,6 @@
 using System.Linq;
 
 using ScottPlot;
-using ScottPlot.Plottables;
 
 namespace SharpMiner.Graphics
 {
@@ -23,7 +22,7 @@ namespace SharpMiner.Graphics
                 .Select(x => new Tick(x, $"Comp {x+1}")).ToArray();
 
             Tick[] yTicks = Generate.Consecutive(5, maxVariance / 5, minVariance)
-                .Select(x => new Tick(x, x.ToString())).ToArray();
+                .Select(x => new Tick(x, Math.Round(x).ToString())).ToArray();
 
             graph.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(xTicks);
             graph.Axes.Left.TickGenerator = new ScottPlot.TickGenerators.NumericManual(yTicks);

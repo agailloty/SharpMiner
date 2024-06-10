@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Factorization;
-using MathNet.Numerics.Statistics;
 
 namespace SharpMiner
 {
@@ -13,8 +12,8 @@ namespace SharpMiner
         private readonly int _defaultComponents;
 
         #region Public properties
-        public Vector<double> EigenValues { get; private set; }
-        public Matrix<double> EigenVectors { get; private set; }
+        public Vector<double> EigenValues { get; }
+        public Matrix<double> EigenVectors { get; }
         public Matrix<double> Scores { get; private set; }
         public Matrix<double> Projections { get; private set; }
         public Matrix<double> Coefficients { get; private set; }
@@ -22,7 +21,7 @@ namespace SharpMiner
         public DatasetStatistics DatasetStatistics { get; }
 
         public Matrix<double> Dataset {  get; }
-        public Svd<double> Svd { get; private set; }
+        public Svd<double> Svd { get; }
         public FactorResults ColumnsResults { get; private set; }
         public FactorResults RowResults { get; private set; }
 
@@ -36,17 +35,15 @@ namespace SharpMiner
         /// <param name="weights"></param>
         /// <param name="ncomponents"></param>
         /// <exception cref="ArgumentException"></exception>
-        public PrincipalComponentAnalysis(Matrix<double> data, IEnumerable<double> weights = null, int? ncomponents = null)
+        public PrincipalComponentAnalysis(Matrix<double> data, double[] weights = null, int? ncomponents = null)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            Dataset = data ?? throw new ArgumentNullException(nameof(data));
 
-            Dataset = data;
-
-            DatasetStatistics = new DatasetStatistics(data);
+            DatasetStatistics = new DatasetStatistics(Dataset, weights);
             
-            ComputeEigen(DatasetStatistics.ScaledAndReducedData);
+            (Svd, EigenValues, EigenVectors) = ComputeEigen(DatasetStatistics);
 
-            if (ncomponents ==null)
+            if (ncomponents == null)
                 ncomponents = data.ColumnCount;
 
             _defaultComponents = ncomponents.Value;
@@ -54,19 +51,22 @@ namespace SharpMiner
             ComputePCAFromEigen(normalize: false);
         }
 
+        #region Public methods
+        #endregion
+
+        #region Private methods
+
         /// <summary>
         /// Computes both Eigenvalues & Eigenvectors
         /// </summary>
         /// <returns></returns>
-        private void ComputeEigen(Matrix<double> data)
+        private static (Svd<double> svd, Vector<double> eigenvalues, Matrix<double> eigenvectors) ComputeEigen(DatasetStatistics dataset)
         {
-            var svd = data.Svd();
-            if (svd != null)
-            {
-                Svd = svd;
-                EigenValues = svd.S.PointwisePower(2.0);
-                EigenVectors = svd.VT.Transpose();
-            }
+            Svd<double> svd = ComputeAjustedSvd(dataset.ScaledAndReducedData, dataset.RowWeights, dataset.ColumnWeights);
+            Vector<double> eigenvalues = svd.S.PointwisePower(2.0);
+            Matrix<double> eigenvectors = svd.VT.Transpose();
+
+            return (svd, eigenvalues, eigenvectors);
         }
 
         private void ComputePCAFromEigen(bool normalize = true)
@@ -103,24 +103,25 @@ namespace SharpMiner
             Vector<double> weighedEigenvalues = DenseMatrix.Build.Dense(Dataset.RowCount, Dataset.ColumnCount, 1.0)
                 .MultiplyByColumnVector(DatasetStatistics.SquaredColumnWeights.ToVector())
                 .Transpose()
-                .MultiplyByColumnVector(DatasetStatistics.SquaredRowWeights.ToVector())
+                .MultiplyByColumnVector(DatasetStatistics.RootSquaredRowWeights.ToVector())
                 .RowSums();
 
             weighedEigenvalues = Svd.S
                 .PointwiseDivide(weighedEigenvalues);
 
-            var columnCoordinates = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
-            var columnsSquaredCosinus = DenseMatrix.Build.Dense(scores.ColumnCount, scores.ColumnCount);
+            var diagonalWeighedEigenvalues = Matrix<double>.Build.Diagonal(weighedEigenvalues.ToArray());
 
-            for (int scoreIndex = 0; scoreIndex < scores.ColumnCount; scoreIndex++)
-            {
-                for (int datasetIndex = 0; datasetIndex < scores.ColumnCount; datasetIndex++)
-                {
-                    double corcoeff = Correlation.Pearson(scores.Column(scoreIndex), Dataset.Column(datasetIndex));
-                    columnCoordinates[scoreIndex, datasetIndex] = corcoeff;
-                    columnsSquaredCosinus[scoreIndex, datasetIndex] = Math.Pow(corcoeff, 2);
-                }
-            }
+            var rightSingularSigns = EigenVectors.ColumnSums()
+                .Select(x => Convert.ToDouble(Math.Sign(x)))
+                .ToArray();
+
+            Matrix<double> columnCoordinates = EigenVectors.MultiplyByRowVector(rightSingularSigns.ToVector())
+                .Multiply(diagonalWeighedEigenvalues);
+
+            Matrix<double> columnsSquaredCosinus = columnCoordinates.PointwisePower(2.0);
+
+            //TODO : Utiliser la fonction Math.Sign pour trouver le signe (-1, 0, 1) de la somme des lignes de Svd.VT
+            // Puis mutliplier chaque colonne de la matrice des coordonnées par le signe. 
 
             Vector<double> weighedEigenvaluesSquared = weighedEigenvalues.PointwisePower(2);
 
@@ -148,5 +149,22 @@ namespace SharpMiner
 
             return (rows, columns);
         }
+
+        private static Svd<double> ComputeAjustedSvd(Matrix<double> reducedAndScaledDataset, double[] rowWeights, double[] columnWeights)
+        {
+            Matrix<double> m_rowWeights = Matrix<double>.Build.DenseOfRowArrays(rowWeights);
+            Matrix<double> m_columnWeights = Matrix<double>.Build.DenseOfColumnArrays(columnWeights);
+
+            reducedAndScaledDataset =
+                reducedAndScaledDataset
+                .MultiplyByColumnVector(columnWeights.ToVector().PointwisePower(0.5))
+                .Transpose()
+                .MultiplyByColumnVector(rowWeights.ToVector().PointwisePower(0.5))
+                .Transpose();
+
+            return reducedAndScaledDataset.Svd();
+        }
+
+        #endregion
     }
 }

@@ -83,7 +83,65 @@ namespace SharpMiner
 
             var res = matrix.PointwiseMultiply(divisorMatrix);
             return res;
+        }
 
+        public static Matrix<double> AddRowVector(this Matrix<double> matrix, Vector<double> vector, AddOperation operation)
+        {
+            // Make sure matrix columns count is equal to vector length
+            if (matrix.RowCount != vector.Count)
+                throw new ArgumentException("Matrix rows count should be equal to the length of the vector to add");
+
+            // Create a matrix of same size as the current matrix based on the vector
+
+            Matrix<double> secondMatrix = Matrix<double>.Build.Dense(matrix.RowCount, matrix.ColumnCount, (i, j) => vector[j]);
+
+            Matrix<double> result;
+
+            switch (operation)
+            {
+                case AddOperation.Addition:
+                    result = matrix.Add(secondMatrix); break;
+                case AddOperation.Subtraction:
+                    result = matrix.Subtract(secondMatrix); break;
+
+                default:
+                    result = matrix.Add(secondMatrix); break;
+            }
+
+            return result;
+        }
+
+        public static Matrix<double> AddColumnVector(this Matrix<double> matrix, Vector<double> vector, AddOperation operation)
+        {
+            // Make sure matrix columns count is equal to vector length
+            if (matrix.ColumnCount != vector.Count)
+                throw new ArgumentException("Matrix rows count should be equal to the length of the vector to add");
+
+            // Create a matrix of same size as the current matrix based on the vector
+
+            Matrix<double> secondMatrix = Matrix<double>.Build.Dense(matrix.RowCount, matrix.ColumnCount, (i, j) => vector[j]);
+
+            Matrix<double> result;
+
+            switch (operation)
+            {
+                case AddOperation.Addition:
+                    result = matrix.Add(secondMatrix); break;
+                case AddOperation.Subtraction:
+                    result = matrix.Subtract(secondMatrix); break;
+
+                default:
+                    result = matrix.Add(secondMatrix); break;
+            }
+
+            return result;
         }
     }
+
+    public enum AddOperation
+    {
+        Addition,
+        Subtraction
+    }
+
 }
