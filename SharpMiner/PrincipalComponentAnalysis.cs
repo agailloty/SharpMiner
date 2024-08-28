@@ -5,11 +5,16 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
+using ScottPlot;
+
 namespace SharpMiner
 {
+    /// <summary>
+    /// Principal component analysis (PCA) is a linear dimensionality reduction technique with applications in exploratory data analysis, visualization and data preprocessing.
+    ///The data is linearly transformed onto a new coordinate system such that the directions(principal components) capturing the largest variation in the data can be easily identified.
+    /// </summary>
     public class PrincipalComponentAnalysis
     {
-        private readonly int _defaultComponents;
 
         #region Public properties
         public Vector<double> EigenValues { get; }
@@ -31,22 +36,12 @@ namespace SharpMiner
         /// The steps to compute a PCA are the following : compute eignenvalues, compute principal components from the eigenvalues
         /// and project
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="weights"></param>
-        /// <param name="ncomponents"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public PrincipalComponentAnalysis(Matrix<double> data, double[] weights = null, int? ncomponents = null)
+        public PrincipalComponentAnalysis(Specs specifications)
         {
-            Dataset = data ?? throw new ArgumentNullException(nameof(data));
-
-            DatasetStatistics = new DatasetStatistics(Dataset, weights);
+            Dataset = specifications.DataSet.Data;
+            DatasetStatistics = new DatasetStatistics(Dataset, specifications.RowsWeights);
             
             (Svd, EigenValues, EigenVectors) = ComputeEigen(DatasetStatistics);
-
-            if (ncomponents == null)
-                ncomponents = data.ColumnCount;
-
-            _defaultComponents = ncomponents.Value;
 
             ComputePCAFromEigen(normalize: false);
         }

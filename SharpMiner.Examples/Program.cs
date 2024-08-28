@@ -10,7 +10,9 @@ var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", f
 
 if (data != null)
 {
-    var pca = new PrincipalComponentAnalysis(data, ncomponents: 5);
+    var specs = new Specs(factorMethod: FactorMethod.PCA, dataSet: DataSet.LoadFromMatrix(data));
+
+    var pca = new PrincipalComponentAnalysis(specs);
 
     DelimitedWriter.Write(filePath: "columnCoordinates.csv", pca.ColumnsResults.Coordinates);
     DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", pca.ColumnsResults.SquaredCosinus);
