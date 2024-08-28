@@ -12,14 +12,21 @@ namespace SharpMiner
         private double[] _rowsWeights;
         private double[] _columnsWeights;
         private long? _numberOfComponents;
+        private DataSet _centeredAndScaledData;
 
-        public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, double[] columnWeights = null, long? numberOfComponents = null) 
+        public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, double[] columnWeights = null, long? numberOfComponents = null, bool centeredAndScale = true) 
         {
             FactorMethod = factorMethod;
             DataSet = dataSet;
             RowsWeights = rowsWeights;
             ColumnsWeights = columnWeights;
             NumberOfComponents = numberOfComponents;
+            IsCenteredAndScaled = centeredAndScale;
+            if (centeredAndScale)
+            {
+                var centeredScaledMatrix = MatrixHelper.CenterAndScale(DataSet.Data);
+                _centeredAndScaledData = DataSet.LoadFromMatrix(centeredScaledMatrix);
+            }
         }
 
         /// <summary>
@@ -97,6 +104,17 @@ namespace SharpMiner
                     throw new ArgumentException("The number of components should not exceed the number of columns in the dataset.");
                 }
             }
+        }
+        /// <summary>
+        /// Specify if the dataset must be centered and scaled before computation
+        /// </summary>
+        public bool IsCenteredAndScaled { get; set; }
+        /// <summary>
+        /// Compute centered and scaled data for computation
+        /// </summary>
+        public DataSet CenteredAndScaledData
+        {
+            get => _centeredAndScaledData;
         }
     }
 }

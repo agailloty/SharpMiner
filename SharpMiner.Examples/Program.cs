@@ -10,9 +10,20 @@ var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", f
 
 if (data != null)
 {
+    
+
     var specs = new Specs(factorMethod: FactorMethod.PCA, dataSet: DataSet.LoadFromMatrix(data));
+    var corepca = new CorePCA(specs);
+
+    var projections = corepca.Project(5);
+
+    var exp = corepca.GetExplainedVariance(5);
+
+    DelimitedWriter.Write(filePath: "projections.csv", projections);
 
     var pca = new PrincipalComponentAnalysis(specs);
+
+    
 
     DelimitedWriter.Write(filePath: "columnCoordinates.csv", pca.ColumnsResults.Coordinates);
     DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", pca.ColumnsResults.SquaredCosinus);
