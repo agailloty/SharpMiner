@@ -11,7 +11,7 @@ namespace SharpMiner
     {
         private double[] _rowsWeights;
         private double[] _columnsWeights;
-        private long? _numberOfComponents;
+        private long _numberOfComponents;
         private DataSet _centeredAndScaledData;
 
         public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, double[] columnWeights = null, long? numberOfComponents = null, bool centeredAndScale = true) 
@@ -20,7 +20,7 @@ namespace SharpMiner
             DataSet = dataSet;
             RowsWeights = rowsWeights;
             ColumnsWeights = columnWeights;
-            NumberOfComponents = numberOfComponents;
+            NumberOfComponents = numberOfComponents ?? dataSet.ColumnCount;
             IsCenteredAndScaled = centeredAndScale;
             if (centeredAndScale)
             {
@@ -89,20 +89,16 @@ namespace SharpMiner
         /// <summary>
         /// Number of components to be kept after the analysis
         /// </summary>
-        public long? NumberOfComponents
+        public long NumberOfComponents
         {
             get => _numberOfComponents;
             set
             {
-                if (value == null)
-                {
-                    _numberOfComponents = DataSet.ColumnCount;
-                }
-
-                else if (value > DataSet.ColumnCount)
+                if (value > DataSet.ColumnCount)
                 {
                     throw new ArgumentException("The number of components should not exceed the number of columns in the dataset.");
                 }
+                _numberOfComponents = value;
             }
         }
         /// <summary>

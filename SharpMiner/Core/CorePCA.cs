@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
-namespace SharpMiner
+namespace SharpMiner.Core
 {
     /// <summary>
     /// This class implements the Principal Component Analysis algortithm 
@@ -16,6 +14,7 @@ namespace SharpMiner
         private Svd<double> _svd { get; set; }
         private DataSet _dataset;
         private Matrix<double> _principalComponents;
+        private Matrix<double> _singularValues;
 
         /// <summary>
         /// Initialize and compute PCA using SVD
@@ -34,6 +33,16 @@ namespace SharpMiner
 
             ComputePrincipalComponentsUsingSVD();
         }
+        /// <summary>
+        /// Get the normalized singular values computed from the SVD
+        /// </summary>
+        public Matrix<double> SingularValues => _singularValues;
+
+        /// <summary>
+        /// Get the singular value decomposition on which the principal components are computed.
+        /// </summary>
+        public Svd<double> Svd => _svd;
+
         /// <summary>
         /// Returns an array containing the cumulative sums of explained variance up to the specified number of components
         /// </summary>

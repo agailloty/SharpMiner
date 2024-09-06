@@ -2,6 +2,7 @@
 using MathNet.Numerics.Data.Text;
 using System.Globalization;
 using SharpMiner.Graphics;
+using SharpMiner.Core;
 
 string csvFilePath = "Datasets/indicators.csv";
 var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
@@ -17,9 +18,13 @@ if (data != null)
 
     var projections = corepca.Project(5);
 
+    var singularValues = corepca.Svd.VT.Transpose();
+
     var exp = corepca.GetExplainedVariance(5);
 
     DelimitedWriter.Write(filePath: "projections.csv", projections);
+
+    DelimitedWriter.Write(filePath: "singularValues.csv", singularValues);
 
     var pca = new PrincipalComponentAnalysis(specs);
 
