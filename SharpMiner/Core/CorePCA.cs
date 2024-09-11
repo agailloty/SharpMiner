@@ -15,6 +15,7 @@ namespace SharpMiner.Core
         private DataSet _dataset;
         private Matrix<double> _principalComponents;
         private Matrix<double> _singularValues;
+        private Specs _spec;
 
         /// <summary>
         /// Initialize and compute PCA using SVD
@@ -22,6 +23,7 @@ namespace SharpMiner.Core
         /// <param name="specs"></param>
         public CorePCA(Specs specs)
         {
+            _spec = specs;
             if (specs.IsCenteredAndScaled)
             {
                 _dataset = specs.CenteredAndScaledData;
@@ -68,15 +70,34 @@ namespace SharpMiner.Core
 
             return cumulativeSums;
         }
+
         /// <summary>
-        /// Project the original data onto the principal components
+        /// Projects the dataset onto a lower-dimensional subspace using the specified number of components.
         /// </summary>
-        /// <param name="numberComponents"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="numberComponents">
+        /// The number of principal components to use for the projection. If the value exceeds the available number 
+        /// of components, it will be automatically reduced to the maximum available.
+        /// </param>
+        /// <returns>
+        /// A matrix representing the projected data in the reduced dimensionality space.
+        /// </returns>
+        /// <remarks>
+        /// This method multiplies the dataset matrix by a sub-matrix constructed from the first <paramref name="numberComponents"/>
+        /// principal components to perform the projection. It ensures the number of components does not exceed the total number available.
+        /// </remarks>
+
         public Matrix<double> Project(int numberComponents)
         {
-            return _dataset.Data.Multiply(_principalComponents);
+            if (numberComponents > _spec.NumberOfComponents)
+                numberComponents = (int)_spec.NumberOfComponents;
+
+            int rowNumbers = (int)_spec.DataSet.RowCount;
+            var firstColumns = Enumerable.Range(0, numberComponents);
+            var subMatrix = Matrix<double>.Build
+                .DenseOfColumnVectors(firstColumns.Select(i => _principalComponents.Column(i))
+                .ToArray());
+
+            return _dataset.Data.Multiply(subMatrix);
         }
         /// <summary>
         /// Returns the principal components as n*n matrix where n is the number of columns
