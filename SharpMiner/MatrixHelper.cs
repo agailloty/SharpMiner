@@ -7,8 +7,25 @@ using MathNet.Numerics.Statistics;
 
 namespace SharpMiner
 {
+    /// <summary>
+    /// Helper class that contains various static methods
+    /// </summary>
     public static class MatrixHelper
     {
+        /// <summary>
+        /// Centers and scales the columns of the input matrix by subtracting the mean and dividing by the 
+        /// standard deviation of each column.
+        /// </summary>
+        /// <param name="data">The matrix containing the data to be centered and scaled, where each column represents a variable.</param>
+        /// <returns>
+        /// A new matrix where each column has been centered (mean subtracted) and scaled (divided by standard deviation).
+        /// If a column's standard deviation is zero, the data is only centered, without scaling.
+        /// </returns>
+        /// <remarks>
+        /// This method normalizes the input matrix by making each column have a mean of 0 and a standard deviation of 1, 
+        /// which is often useful for machine learning algorithms or statistical analysis.
+        /// </remarks>
+
         public static Matrix<double> CenterAndScale(Matrix<double> data)
         {
             int rows = data.RowCount;

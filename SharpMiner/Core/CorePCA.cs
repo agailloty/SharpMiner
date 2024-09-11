@@ -91,7 +91,6 @@ namespace SharpMiner.Core
             if (numberComponents > _spec.NumberOfComponents)
                 numberComponents = (int)_spec.NumberOfComponents;
 
-            int rowNumbers = (int)_spec.DataSet.RowCount;
             var firstColumns = Enumerable.Range(0, numberComponents);
             var subMatrix = Matrix<double>.Build
                 .DenseOfColumnVectors(firstColumns.Select(i => _principalComponents.Column(i))
