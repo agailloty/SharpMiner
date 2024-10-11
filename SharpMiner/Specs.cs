@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
+using SharpMiner.Core;
 
 namespace SharpMiner
 {
@@ -13,8 +13,11 @@ namespace SharpMiner
         private double[] _columnsWeights;
         private long _numberOfComponents;
         private DataSet _centeredAndScaledData;
+        private DecompositionMethod? _decompositionMethod;
 
-        public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, double[] columnWeights = null, long? numberOfComponents = null, bool centeredAndScale = true) 
+        public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, 
+                        double[] columnWeights = null, long? numberOfComponents = null, 
+                        bool centeredAndScale = true, DecompositionMethod? decompositionMethod = null) 
         {
             FactorMethod = factorMethod;
             DataSet = dataSet;
@@ -26,6 +29,11 @@ namespace SharpMiner
             {
                 var centeredScaledMatrix = MatrixHelper.CenterAndScale(DataSet.Data);
                 _centeredAndScaledData = DataSet.LoadFromMatrix(centeredScaledMatrix);
+            }
+            _decompositionMethod = decompositionMethod;
+            if (_decompositionMethod == null && factorMethod == FactorMethod.PCA)
+            { 
+                _decompositionMethod = Core.DecompositionMethod.Svd;
             }
         }
 
@@ -112,5 +120,7 @@ namespace SharpMiner
         {
             get => _centeredAndScaledData;
         }
+
+        public DecompositionMethod? DecompositionMethod => _decompositionMethod;
     }
 }

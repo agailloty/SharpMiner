@@ -13,18 +13,19 @@ if (data != null)
 {
     
 
-    var specs = new Specs(factorMethod: FactorMethod.PCA, dataSet: DataSet.LoadFromMatrix(data));
+    var specs = new Specs(factorMethod: FactorMethod.PCA, dataSet: DataSet.LoadFromMatrix(data), 
+        decompositionMethod: DecompositionMethod.Svd);
     var corepca = new CorePCA(specs);
 
     var projections = corepca.Project(5);
 
-    var singularValues = corepca.Svd.VT.Transpose();
+    //var singularValues = corepca.Svd.VT.Transpose();
 
     var exp = corepca.GetExplainedVariance(5);
 
     DelimitedWriter.Write(filePath: "projections.csv", projections);
 
-    DelimitedWriter.Write(filePath: "singularValues.csv", singularValues);
+    //DelimitedWriter.Write(filePath: "singularValues.csv", singularValues);
 
     var pca = new PrincipalComponentAnalysis(specs);
 

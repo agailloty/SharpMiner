@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using MathNet.Numerics.Data.Text;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
@@ -14,7 +15,9 @@ namespace SharpMiner.Core
         private Svd<double> _svd { get; set; }
         private DataSet _dataset;
         private Matrix<double> _principalComponents;
-        private Matrix<double> _singularValues;
+        private Vector<double> _singularValues;
+        private Vector<double> _eigenValues;
+        private Matrix<double> _eigenVectors;
         private Specs _spec;
 
         /// <summary>
@@ -32,13 +35,16 @@ namespace SharpMiner.Core
             {
                 _dataset = specs.DataSet;
             }
-
-            ComputePrincipalComponentsUsingSVD();
+            if (specs.DecompositionMethod == DecompositionMethod.Svd) 
+            { 
+                ComputePrincipalComponentsUsingSvd();
+            } 
+            
         }
         /// <summary>
         /// Get the normalized singular values computed from the SVD
         /// </summary>
-        public Matrix<double> SingularValues => _singularValues;
+        public Vector<double> SingularValues => _singularValues;
 
         /// <summary>
         /// Get the singular value decomposition on which the principal components are computed.
@@ -52,9 +58,7 @@ namespace SharpMiner.Core
         /// <returns></returns>
         public double[] GetExplainedVariance(int numberComponents)
         {
-            double[] singularValues = _svd.S.ToArray();
-
-            double[] squaredSingularValues = singularValues.Select(s => s * s).ToArray();
+            double[] squaredSingularValues = _singularValues.Select(s => s * s).ToArray();
             double totalVariance = squaredSingularValues.Sum();
 
             double[] explainedVarianceRatio = squaredSingularValues.Select(s => s / totalVariance).ToArray();
@@ -104,12 +108,18 @@ namespace SharpMiner.Core
         public Matrix<double> PrincipalComponents => _principalComponents;
 
         #region Private methods
-        private void ComputePrincipalComponentsUsingSVD()
+        private void ComputePrincipalComponentsUsingSvd()
         {
             _svd = _dataset.Data.Svd();
-            _principalComponents = _svd.VT.Transpose();
-        }
+            MatrixHelper.ComputeSignFlip(_svd, _spec.DataSet.Data, out Matrix<double> U, out Matrix<double> V);
+            _singularValues = _svd.S;
 
+            if (_singularValues != null)
+            {
+                _eigenValues = _singularValues.PointwisePower(2);
+            }
+            _principalComponents = V.Transpose();
+        }
         #endregion
     }
 }

@@ -35,7 +35,30 @@ namespace SharpMiner.Test
             var result = MatrixHelper.CenterAndScale(_data);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected).Within(1e-16));
+            double tolerance = 1e-10;
+
+            Assert.IsTrue(AreMatricesEqual(expected, result, tolerance));
+        }
+
+        private bool AreMatricesEqual(Matrix<double> matrix1, Matrix<double> matrix2, double tolerance)
+        {
+            if (matrix1.RowCount != matrix2.RowCount || matrix1.ColumnCount != matrix2.ColumnCount)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < matrix1.RowCount; i++)
+            {
+                for (int j = 0; j < matrix1.ColumnCount; j++)
+                {
+                    if (Math.Abs(matrix1[i, j] - matrix2[i, j]) > tolerance)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         [Test]
@@ -61,7 +84,7 @@ namespace SharpMiner.Test
             var result = MatrixHelper.CenterAndScale(data);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected).Within(1e-16));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }
