@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MathNet.Numerics.LinearAlgebra;
+
 using SharpMiner.Core;
 
 namespace SharpMiner
@@ -11,24 +13,25 @@ namespace SharpMiner
     {
         private double[] _rowsWeights;
         private double[] _columnsWeights;
-        private long _numberOfComponents;
+        private int _numberOfComponents;
         private DataSet _centeredAndScaledData;
         private DecompositionMethod? _decompositionMethod;
 
-        public Specs(FactorMethod factorMethod, DataSet dataSet, double[] rowsWeights = null, 
-                        double[] columnWeights = null, long? numberOfComponents = null, 
+        public Specs(FactorMethod factorMethod, int numberOfComponents, DataSet dataSet, double[] rowsWeights = null, 
+                        double[] columnWeights = null,
                         bool centeredAndScale = true, DecompositionMethod? decompositionMethod = null) 
         {
             FactorMethod = factorMethod;
             DataSet = dataSet;
             RowsWeights = rowsWeights;
             ColumnsWeights = columnWeights;
-            NumberOfComponents = numberOfComponents ?? dataSet.ColumnCount;
+            NumberOfComponents = numberOfComponents;
             IsCenteredAndScaled = centeredAndScale;
             if (centeredAndScale)
             {
                 var centeredScaledMatrix = MatrixHelper.CenterAndScale(DataSet.Data);
                 _centeredAndScaledData = DataSet.LoadFromMatrix(centeredScaledMatrix);
+                WeighedMatrix = DataSet.Data.MapIndexed((i, j, value) => value * Math.Sqrt(ColumnsWeights[j]) * Math.Sqrt(RowsWeights[i]));
             }
             _decompositionMethod = decompositionMethod;
             if (_decompositionMethod == null && factorMethod == FactorMethod.PCA)
@@ -45,6 +48,8 @@ namespace SharpMiner
         /// Specify the dataset on which the factor analysis method is to be computed
         /// </summary>
         public DataSet DataSet { get; set; }
+
+        public Matrix<double> WeighedMatrix { get; }
 
         /// <summary>
         /// Specify the weights attributed to each row in the dataset
@@ -83,7 +88,7 @@ namespace SharpMiner
                     _columnsWeights = new double[DataSet.ColumnCount];
                     for (int i = 0; i < DataSet.ColumnCount;i++)
                     {
-                        _columnsWeights[i] = 1.0 / DataSet.ColumnCount;
+                        _columnsWeights[i] = 1.0;
                     }
                 }
 
@@ -97,7 +102,7 @@ namespace SharpMiner
         /// <summary>
         /// Number of components to be kept after the analysis
         /// </summary>
-        public long NumberOfComponents
+        public int NumberOfComponents
         {
             get => _numberOfComponents;
             set

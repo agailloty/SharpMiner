@@ -14,7 +14,7 @@ namespace SharpMiner
     public class DataSet
     {
         /// <summary>
-        /// The matrix data whic is to be exposed
+        /// The matrix data which is to be exposed
         /// </summary>
         public Matrix<double> Data { get; }
         private DataSet(Matrix<double> matrix) 
@@ -60,7 +60,7 @@ namespace SharpMiner
         /// <summary>
         /// Number of column
         /// </summary>
-        public long ColumnCount { get; }
+        public int ColumnCount { get; }
 
         /// <summary>
         /// Load dataset from an existing matrix

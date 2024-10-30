@@ -222,5 +222,58 @@ namespace SharpMiner
 
             return correlationMatrix;
         }
+        /// <summary>
+        /// Applies row and column weights to the input matrix by adjusting each element based on the 
+        /// square roots of the corresponding row and column weights. This transformation is often used in 
+        /// dimensionality reduction techniques such as Principal Component Analysis (PCA) to balance the 
+        /// influence of each row and column while preserving the overall structure of the data.
+        /// </summary>
+        /// <param name="X">The input matrix where rows represent observations and columns represent features.</param>
+        /// <param name="rowWeights">
+        /// A vector of weights corresponding to each row in the matrix. If not provided, uniform weights
+        /// are assumed, meaning each row has an equal contribution. The weights are normalized to sum to 1.
+        /// </param>
+        /// <param name="colWeights">
+        /// A vector of weights corresponding to each column in the matrix. If not provided, each column
+        /// is assumed to have an equal weight of 1, meaning each feature has an equal contribution.
+        /// </param>
+        /// <returns>
+        /// A new matrix where each element is scaled by the square root of its respective row and column weights.
+        /// </returns>
+        /// <remarks>
+        /// The square root of the weights is used to ensure that the overall weighting remains balanced. 
+        /// Multiplying by the square root of both row and column weights means that the scaling for each 
+        /// matrix element is proportional to the contribution of both its row and column without overly 
+        /// inflating or diminishing the influence of any single weight. This allows the matrix to be transformed 
+        /// in such a way that maintains relative distances between data points, which is crucial for algorithms 
+        /// like PCA, where geometric relationships (such as variance) are important.
+        /// </remarks>
+
+        public static Matrix<double> GetWeighedMatrix(Matrix<double> X, Vector<double> rowWeights = null, Vector<double> colWeights = null)
+        {
+            int nrows = X.RowCount;
+            int ncols = X.ColumnCount;
+
+            // Handle default row weights
+            if (rowWeights == null)
+            {
+                rowWeights = Vector<double>.Build.Dense(nrows, 1.0 / nrows);
+            }
+
+            // Handle default column weights
+            if (colWeights == null)
+            {
+                colWeights = Vector<double>.Build.Dense(ncols, 1.0);
+            }
+
+            // Normalize the row and column weights
+            rowWeights = rowWeights.Divide(rowWeights.Sum());
+
+            // Apply row and column weights to X
+            Matrix<double> weightedX = X.MapIndexed((i, j, value) => value * Math.Sqrt(colWeights[j]) * Math.Sqrt(rowWeights[i]));
+
+            return weightedX;
+        }
+
     }
 }

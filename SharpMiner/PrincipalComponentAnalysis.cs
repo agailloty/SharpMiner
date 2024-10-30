@@ -52,7 +52,7 @@ namespace SharpMiner
         #region Private methods
 
         /// <summary>
-        /// Computes both Eigenvalues & Eigenvectors
+        /// Computes both Eigenvalues and Eigenvectors
         /// </summary>
         /// <returns></returns>
         private static (Svd<double> svd, Vector<double> eigenvalues, Matrix<double> eigenvectors) ComputeEigen(DatasetStatistics dataset)
@@ -138,9 +138,9 @@ namespace SharpMiner
                 .MultiplyByRowVector(DatasetStatistics.RowWeights.ToVector())
                 .DivideByVector(weighedEigenvaluesSquared);
 
-            FactorResults rows = new FactorResults(rowCoordinates, rowSquaredCosinus, rowContribution);
+            FactorResults rows = new FactorResults(null, rowCoordinates, rowSquaredCosinus, rowContribution);
 
-            FactorResults columns = new FactorResults(columnCoordinates, columnsSquaredCosinus, columnsContributions);
+            FactorResults columns = new FactorResults(null, columnCoordinates, columnsSquaredCosinus, columnsContributions);
 
             return (rows, columns);
         }
