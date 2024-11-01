@@ -39,7 +39,7 @@ namespace SharpMiner
             {
                 var column = data.Column(j);
                 means[j] = column.Mean();
-                stdDevs[j] = column.StandardDeviation();
+                stdDevs[j] = column.PopulationStandardDeviation();
             }
 
             // Create a new matrix to store the centered and scaled data

@@ -14,12 +14,20 @@ namespace SharpMiner
         private double[] _rowsWeights;
         private double[] _columnsWeights;
         private int _numberOfComponents;
-        private DataSet _centeredAndScaledData;
-        private DecompositionMethod? _decompositionMethod;
+        private Matrix<double> _centeredAndScaledData;
 
-        public Specs(FactorMethod factorMethod, int numberOfComponents, DataSet dataSet, double[] rowsWeights = null, 
+        /// <summary>
+        /// Initialize a specification for computation
+        /// </summary>
+        /// <param name="factorMethod"></param>
+        /// <param name="numberOfComponents"></param>
+        /// <param name="dataSet"></param>
+        /// <param name="rowsWeights"></param>
+        /// <param name="columnWeights"></param>
+        /// <param name="centeredAndScale"></param>
+        public Specs(FactorMethod factorMethod, int numberOfComponents, Matrix<double> dataSet, double[] rowsWeights = null, 
                         double[] columnWeights = null,
-                        bool centeredAndScale = true, DecompositionMethod? decompositionMethod = null) 
+                        bool centeredAndScale = true) 
         {
             FactorMethod = factorMethod;
             DataSet = dataSet;
@@ -29,14 +37,9 @@ namespace SharpMiner
             IsCenteredAndScaled = centeredAndScale;
             if (centeredAndScale)
             {
-                var centeredScaledMatrix = MatrixHelper.CenterAndScale(DataSet.Data);
-                _centeredAndScaledData = DataSet.LoadFromMatrix(centeredScaledMatrix);
-                WeighedMatrix = DataSet.Data.MapIndexed((i, j, value) => value * Math.Sqrt(ColumnsWeights[j]) * Math.Sqrt(RowsWeights[i]));
-            }
-            _decompositionMethod = decompositionMethod;
-            if (_decompositionMethod == null && factorMethod == FactorMethod.PCA)
-            { 
-                _decompositionMethod = Core.DecompositionMethod.Svd;
+                var centeredScaledMatrix = MatrixHelper.CenterAndScale(dataSet);
+                _centeredAndScaledData = centeredScaledMatrix;
+                WeighedMatrix = dataSet.MapIndexed((i, j, value) => value * Math.Sqrt(ColumnsWeights[j]) * Math.Sqrt(RowsWeights[i]));
             }
         }
 
@@ -47,7 +50,7 @@ namespace SharpMiner
         /// <summary>
         /// Specify the dataset on which the factor analysis method is to be computed
         /// </summary>
-        public DataSet DataSet { get; set; }
+        public Matrix<double> DataSet { get; set; }
 
         public Matrix<double> WeighedMatrix { get; }
 
@@ -121,11 +124,9 @@ namespace SharpMiner
         /// <summary>
         /// Compute centered and scaled data for computation
         /// </summary>
-        public DataSet CenteredAndScaledData
+        public Matrix<double> CenteredAndScaledData
         {
             get => _centeredAndScaledData;
         }
-
-        public DecompositionMethod? DecompositionMethod => _decompositionMethod;
     }
 }

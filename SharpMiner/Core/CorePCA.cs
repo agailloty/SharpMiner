@@ -3,55 +3,41 @@ using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace SharpMiner.Core
 {
     /// <summary>
     /// This class implements the Principal Component Analysis algortithm 
     /// </summary>
-    public class CorePCA
+    public class PrincipalComponentAnalysis
     {
-        private DataSet _dataset;
-        private Vector<double> _eigenValues;
-        private Matrix<double> _eigenVectors;
-        private Specs _spec;
-        private Matrix<double> _projectedData;
-        private DatasetStatistics _statistics;
+        private readonly Specs _spec;
         private FactorResults _rowResults;
         private FactorResults _columnResults;
         private double[] _explainedVariance;
+        private Svd<double> _svd;
 
         /// <summary>
         /// Initialize and compute PCA using SVD
         /// </summary>
         /// <param name="specs"></param>
-        public CorePCA(Specs specs)
+        public PrincipalComponentAnalysis(Specs specs)
         {
             _spec = specs;
-            _dataset = specs.IsCenteredAndScaled ? specs.CenteredAndScaledData : specs.DataSet;
-            if (specs.DecompositionMethod == DecompositionMethod.Svd) 
-            { 
-                ComputePrincipalComponentsUsingSvd();
-            } 
+            ComputePrincipalComponentsUsingSvd();
             
         }
         /// <summary>
-        /// Get the normalized singular values computed from the SVD
+        /// Get the list of computed components organised by rows and columns results
         /// </summary>
-
-        /// <summary>
-        /// Returns the principal components as n*n matrix where n is the number of columns
-        /// </summary>
-
-        /// <summary>
-        /// Compute the principal components
-        /// </summary>
-        /// <param name="numberComponents"></param>
-        /// <returns></returns>
-        public Component[] GetPrincipalComponents(int numberComponents)
+        public Component[] Components 
         {
-            return Enumerable.Range(1, numberComponents)
-                .Select(c => ComputeComponent(c)).ToArray();
+            get
+            {
+                return Enumerable.Range(1, _spec.NumberOfComponents)
+                        .Select(c => ComputeComponent(c)).ToArray();
+            }
         }
         /// <summary>
         /// Get the percentage of inertia explained by each component
@@ -71,6 +57,20 @@ namespace SharpMiner.Core
                 return StatsHelper.CumulativeSum(ExplainedVariance);
             }
         }
+        /// <summary>
+        /// Get the result of the computed singular value decomposition
+        /// </summary>
+        public Svd<double> Svd => _svd;
+
+        /// <summary>
+        /// Get the individuals results 
+        /// </summary>
+        public FactorResults RowsResults => _rowResults;
+        /// <summary>
+        /// Get the features results
+        /// </summary>
+        public FactorResults ColumnsResults => _columnResults;
+
 
         private Component ComputeComponent(int rank)
         {
@@ -91,59 +91,70 @@ namespace SharpMiner.Core
         #region Private methods
         private void ComputePrincipalComponentsUsingSvd()
         {
-            var squaredRowWeights = DenseVector.Build.DenseOfArray(_spec.RowsWeights).PointwiseSqrt();
-            var weighedScaled = _spec.CenteredAndScaledData.Data.MultiplyByRowVector(squaredRowWeights);
+            Vector<double> squaredRowWeights = DenseVector.Build.DenseOfArray(_spec.RowsWeights).PointwiseSqrt();
+            Matrix<double> weighedScaled = _spec.CenteredAndScaledData.MultiplyByRowVector(squaredRowWeights);
 
-            var svd = weighedScaled.Svd(true);
+            _svd = weighedScaled.Svd(true);
 
             // Take a submatrix from U such that U matches the dimensions of original data
-            Matrix<double> U = svd.U.SubMatrix(0, _spec.RowsWeights.Length, 0, _spec.ColumnsWeights.Length);
+            Matrix<double> U = _svd.U.SubMatrix(0, _spec.RowsWeights.Length, 0, _spec.NumberOfComponents);
             
-            Matrix<double> V = svd.VT.Transpose();
-            Vector<double> S = svd.S;
+            Matrix<double> V = _svd.VT
+                .SubMatrix(0, _spec.ColumnsWeights.Length, 0, _spec.NumberOfComponents)
+                .Transpose();
+            Vector<double> S = _svd.S.SubVector(0, _spec.NumberOfComponents);
 
             U = U.MapIndexed((i, j, value) => value / Math.Sqrt(_spec.RowsWeights[i]));
 
             V = V.MapIndexed((i, j, value) => value / Math.Sqrt(_spec.ColumnsWeights[j]));
 
-            var scores = U.MultiplyByColumnVector(S);
-            var loadings = V.Transpose().MultiplyByColumnVector(S);
+            Matrix<double> scores = U.MultiplyByColumnVector(S);
+            Matrix<double> loadings = V.Transpose().MultiplyByColumnVector(S);
 
-            var rowWeightVector = DenseVector.Build.DenseOfArray(_spec.RowsWeights);
+            Vector<double> rowWeightVector = DenseVector.Build.DenseOfArray(_spec.RowsWeights);
 
-            Matrix<double> columnDist = weighedScaled
-                .MultiplyByRowVector(rowWeightVector);
+            Vector<double> columnWeightVector = DenseVector.Build.DenseOfEnumerable(_spec.ColumnsWeights.Take(_spec.NumberOfComponents));
+            Vector<double> squaredS = S.PointwisePower(2);
 
-            var columnWeightVector = DenseVector.Build.DenseOfArray(_spec.ColumnsWeights);
-            var squaredS = S.PointwisePower(2);
+            Matrix<double> X = _spec.CenteredAndScaledData.SubMatrix(0, _spec.RowsWeights.Length, 0, _spec.NumberOfComponents);
 
-            var rowDistance = _spec.CenteredAndScaledData.Data
+            Vector<double> rowDistance = X
                 .PointwisePower(2)
                 .MultiplyByColumnVector(columnWeightVector)
                 .RowSums();
 
-            var rowCos2 = scores
+            Matrix<double> rowCos2 = scores
                 .PointwisePower(2)
                 .DivideByRowVector(rowDistance);
 
-            var rowContribs = scores
+            Matrix<double> rowContribs = scores
                 .PointwisePower(2)
                 .MultiplyByRowVector(rowWeightVector.Divide(rowWeightVector.Sum()))
-                .DivideByVector(squaredS);
+                .DivideByVector(squaredS.Multiply(100.0));
 
+            // Columns
 
+            Matrix<double> squaredWeighedData = _spec.CenteredAndScaledData.PointwisePower(2);
 
-            var columnContribs = loadings
-                .PointwisePower(2)
-                .DivideByVector(squaredS)
-                .MultiplyByColumnVector(columnWeightVector)
-                .Transpose();
+            Vector<double> columnDistance = squaredWeighedData
+                .MultiplyRows(rowWeightVector)
+                .ColumnSums().SubVector(0, _spec.NumberOfComponents);
 
-            var explainedVariance = squaredS.Divide(squaredS.Sum()) * 100;
+            Vector<double> explainedVariance = squaredS.Divide(_svd.S.PointwisePower(2).Sum()) * 100;
             _explainedVariance = explainedVariance.ToArray();
 
+            Matrix<double> columnCorrelation = loadings.DivideByVector(columnDistance);
+
+            Matrix<double> columnCos2 = columnCorrelation.PointwisePower(2);
+
+            Matrix<double> columnContribs = loadings
+            .PointwisePower(2)
+            .DivideByVector(squaredS.Multiply(100.0))
+            .MultiplyByColumnVector(columnWeightVector)
+            .Transpose();
+
             _rowResults = new FactorResults(explainedVariance, scores, rowCos2, rowContribs);
-            _columnResults = new FactorResults(explainedVariance, loadings, null, null);
+            _columnResults = new FactorResults(explainedVariance, loadings, columnCos2, columnContribs);
 
         }
         #endregion

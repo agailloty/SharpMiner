@@ -136,6 +136,12 @@ namespace SharpMiner
 
             return result;
         }
+
+        public static Matrix<double> MultiplyRows(this Matrix<double> matrix, Vector<double> rowWeights)
+        {
+            // Multiply each row by the corresponding weight in rowWeights
+            return matrix.MapIndexed((i, j, value) => value * rowWeights[i]);
+        }
     }
 
     public enum AddOperation

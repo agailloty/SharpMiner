@@ -13,15 +13,14 @@ if (data != null)
 {
     
 
-    var specs = new Specs(factorMethod: FactorMethod.PCA, numberOfComponents : 5,
-                                dataSet: DataSet.LoadFromMatrix(data), 
-                                decompositionMethod: DecompositionMethod.Svd);
+    var specs = new Specs(factorMethod: FactorMethod.PCA, 
+                                numberOfComponents : 5,
+                                dataSet: data);
 
-    var corepca = new CorePCA(specs);
-    var pcaRes = new PrincipalComponentAnalysis(specs);
+    var corepca = new PrincipalComponentAnalysis(specs);
 
 
-    var projections = corepca.GetPrincipalComponents(5);
+    var projections = corepca.Components;
 
 
     //DelimitedWriter.Write(filePath: "projections.csv", projections);
@@ -30,22 +29,17 @@ if (data != null)
 
     var pca = new PrincipalComponentAnalysis(specs);
 
-    /*
 
-    DelimitedWriter.Write(filePath: "columnCoordinates.csv", pca.ColumnsResults.Coordinates);
-    DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", pca.ColumnsResults.SquaredCosinus);
-    DelimitedWriter.Write(filePath: "columnContributions.csv", pca.ColumnsResults.Contributions);
+    DelimitedWriter.Write(filePath: "columnCoordinates.csv", corepca.ColumnsResults.Coordinates);
+    DelimitedWriter.Write(filePath: "columnSquaredCosinus.csv", corepca.ColumnsResults.SquaredCosinus);
+    DelimitedWriter.Write(filePath: "columnContributions.csv", corepca.ColumnsResults.Contributions);
 
-    DelimitedWriter.Write(filePath: "rowCoordinates.csv", pca.RowResults.Coordinates);
-    DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", pca.RowResults.SquaredCosinus);
-    DelimitedWriter.Write(filePath: "rowContributions.csv", pca.RowResults.Contributions);
+    DelimitedWriter.Write(filePath: "rowCoordinates.csv", corepca.RowsResults.Coordinates);
+    DelimitedWriter.Write(filePath: "rowSquaredCosinus.csv", corepca.RowsResults.SquaredCosinus);
+    DelimitedWriter.Write(filePath: "rowContributions.csv", corepca.RowsResults.Contributions);
 
-    DelimitedWriter.Write(filePath: "Eigenvectors.csv", pca.EigenVectors);
 
-    DelimitedWriter.Write(filePath: "ScaledReducedData.csv", pca.DatasetStatistics.ScaledAndReducedData);
-    */
-
-    var plot = Visualisations.ScreePlot(corepca.CumulativeExplainedVariance);
+    var plot = Visualisations.ScreePlot(corepca.ExplainedVariance);
     plot.SavePng("scrreplot.png", 800, 600);
 
 
