@@ -3,7 +3,7 @@
     {
       "src": [
         {
-          "src": "../SharpMiner/",
+          "src": "../src/SharpMiner/",
           "files": [
             "**/*.csproj"
           ]
