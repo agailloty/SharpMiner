@@ -5,8 +5,16 @@ using ScottPlot;
 
 namespace SharpMiner.Graphics
 {
+    /// <summary>
+    /// This class contains methods to draw the results of the factor analysis on various types of charts
+    /// </summary>
     public static class Visualisations
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="explainedVariances"></param>
+        /// <returns></returns>
         public static Plot ScreePlot(double[] explainedVariances)
         {
             explainedVariances = explainedVariances.OrderByDescending(x => x).ToArray();
@@ -59,7 +67,25 @@ namespace SharpMiner.Graphics
 
             return graph;
         }
-
+        /// <summary>
+        /// Represents the correlation circle in a Principal Component Analysis (PCA), which visualizes the correlations 
+        /// between the original variables and the principal components.
+        /// This field contains data that helps illustrate how each variable is associated with the components, revealing 
+        /// patterns and relationships within the data in the context of the reduced PCA dimensions.
+        /// </summary>
+        /// <remarks>
+        /// The correlation circle is typically a graphical representation where:
+        /// - Each variable is displayed as a vector, with the coordinates on each axis representing its correlation 
+        ///   with the respective principal component.
+        /// - The length and direction of each vector indicate both the strength and nature of the correlation, where 
+        ///   longer vectors imply stronger correlations.
+        /// - Variables with vectors pointing in similar directions are positively correlated, while those in opposite 
+        ///   directions are negatively correlated. Vectors closer to the origin suggest weaker correlations.
+        ///
+        /// The data in this field is usually represented in matrix form, where rows correspond to variables and columns 
+        /// to the principal components. This visualization is valuable for interpreting the roles of variables in the 
+        /// principal component space and understanding underlying data structures.
+        /// </remarks>
         public static Plot CorrelationCircle((double, double)[] correlations, (sbyte, sbyte)? dimensions = null)
         {
             var plt = new Plot();

@@ -5,6 +5,13 @@
     /// </summary>
     public class Component
     {
+        /// <summary>
+        /// Initialise a component object
+        /// </summary>
+        /// <param name="rank"></param>
+        /// <param name="explainedVariance"></param>
+        /// <param name="featureResults"></param>
+        /// <param name="rowResults"></param>
         public Component(int rank, double explainedVariance, FactorResults featureResults, FactorResults rowResults)
         {
             Rank = rank;

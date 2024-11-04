@@ -52,6 +52,12 @@ namespace SharpMiner
         /// </summary>
         public Matrix<double> DataSet { get; set; }
 
+        /// <summary>
+        /// Represents the weighted matrix in a Principal Component Analysis (PCA),
+        /// which is a scaled and reduced version of the original data matrix.
+        /// This field holds the matrix after applying scaling and weighting transformations, used
+        /// to standardize or normalize variables, making them comparable within the PCA framework.
+        /// </summary>
         public Matrix<double> WeighedMatrix { get; }
 
         /// <summary>
