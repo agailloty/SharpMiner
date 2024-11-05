@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
-namespace SharpMiner.Core
+namespace SharpMiner
 {
     /// <summary>
     /// This class implements the Principal Component Analysis algortithm 
@@ -16,6 +16,7 @@ namespace SharpMiner.Core
         private FactorResults _rowResults;
         private FactorResults _columnResults;
         private double[] _explainedVariance;
+        private double[] _cumulativeExplainedVariance;
         private Svd<double> _svd;
 
         /// <summary>
@@ -26,12 +27,12 @@ namespace SharpMiner.Core
         {
             _spec = specs;
             ComputePrincipalComponentsUsingSvd();
-            
+
         }
         /// <summary>
         /// Get the list of computed components organised by rows and columns results
         /// </summary>
-        public Component[] Components 
+        public Component[] Components
         {
             get
             {
@@ -49,14 +50,7 @@ namespace SharpMiner.Core
         /// Get the cumulative sum of explained variance
         /// </summary>
         public double[] CumulativeExplainedVariance
-        {
-            get
-            {
-                if (_explainedVariance == null)
-                    return null;
-                return StatsHelper.CumulativeSum(ExplainedVariance);
-            }
-        }
+            => _cumulativeExplainedVariance.Take(_spec.NumberOfComponents).ToArray();
         /// <summary>
         /// Get the result of the computed singular value decomposition
         /// </summary>
@@ -76,12 +70,13 @@ namespace SharpMiner.Core
         {
             var index = rank - 1;
             int N = _spec.RowsWeights.Length;
-            var explainedVariance = DenseVector.Build.DenseOfArray( new double[] { _rowResults.ExplainedVariance[index] });
+            var explainedVariance = DenseVector.Build.DenseOfArray(new double[] { _rowResults.ExplainedVariance[index] });
+            var cumulativeExplainedVariance = DenseVector.Build.DenseOfArray(new double[] { _rowResults.CumulativeExplainedVariance[index] });
             var rowCoordinates = _rowResults.Coordinates.SubMatrix(0, N, index, 1);
             var rowSquaredCos = _rowResults.SquaredCosinus.SubMatrix(0, N, index, 1);
             var rowContributions = _rowResults.Contributions.SubMatrix(0, N, index, 1);
 
-            var rowResults = new FactorResults(explainedVariance, rowCoordinates, rowSquaredCos, rowContributions);
+            var rowResults = new FactorResults(explainedVariance, cumulativeExplainedVariance, rowCoordinates, rowSquaredCos, rowContributions);
 
             var component = new Component(rank, explainedVariance.First(), rowResults, rowResults);
 
@@ -98,7 +93,7 @@ namespace SharpMiner.Core
 
             // Take a submatrix from U such that U matches the dimensions of original data
             Matrix<double> U = _svd.U.SubMatrix(0, _spec.RowsWeights.Length, 0, _spec.NumberOfComponents);
-            
+
             Matrix<double> V = _svd.VT
                 .SubMatrix(0, _spec.ColumnsWeights.Length, 0, _spec.NumberOfComponents)
                 .Transpose();
@@ -141,7 +136,9 @@ namespace SharpMiner.Core
                 .ColumnSums().SubVector(0, _spec.NumberOfComponents);
 
             Vector<double> explainedVariance = squaredS.Divide(_svd.S.PointwisePower(2).Sum()) * 100;
+            Vector<double> cumulativeExplainedVariance = StatsHelper.CumulativeSum(explainedVariance);
             _explainedVariance = explainedVariance.ToArray();
+            _cumulativeExplainedVariance = StatsHelper.CumulativeSum(_explainedVariance);
 
             Matrix<double> columnCorrelation = loadings.DivideByVector(columnDistance);
 
@@ -153,8 +150,8 @@ namespace SharpMiner.Core
             .MultiplyByColumnVector(columnWeightVector)
             .Transpose();
 
-            _rowResults = new FactorResults(explainedVariance, scores, rowCos2, rowContribs);
-            _columnResults = new FactorResults(explainedVariance, loadings, columnCos2, columnContribs);
+            _rowResults = new FactorResults(explainedVariance, cumulativeExplainedVariance, scores, rowCos2, rowContribs);
+            _columnResults = new FactorResults(explainedVariance, cumulativeExplainedVariance, loadings, columnCos2, columnContribs);
 
         }
         #endregion

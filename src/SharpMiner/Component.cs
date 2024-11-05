@@ -1,4 +1,4 @@
-﻿namespace SharpMiner.Core
+﻿namespace SharpMiner
 {
     /// <summary>
     /// Represent a principal component. A PC is a linear combination of the original variables that maximally explain the variance of all the variables

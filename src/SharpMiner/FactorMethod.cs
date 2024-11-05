@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpMiner.Core
+namespace SharpMiner
 {
     /// <summary>
     /// 

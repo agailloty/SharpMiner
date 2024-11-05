@@ -1,18 +1,17 @@
 ﻿using SharpMiner;
-using MathNet.Numerics.Data.Text;
 using System.Globalization;
 using SharpMiner.Graphics;
-using SharpMiner.Core;
+using MathNet.Numerics.Data.Text;
 
 string csvFilePath = "Datasets/indicators.csv";
 var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
-var data = DelimitedReader.Read<double>(filePath: csvFilePath, delimiter: ",", formatProvider: provider, hasHeaders: true);
+var data = DataSetLoader.LoadFromCsvFile(csvFilePath, provider);
+string urlPath = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators_numerics.csv";
+var remoteData = DataSetLoader.LoadCsvFromRemoteFile(urlPath, provider);
 
 if (data != null)
 {
-    
-
     var specs = new Specs(factorMethod: FactorMethod.PCA, 
                                 numberOfComponents : 5,
                                 dataSet: data);

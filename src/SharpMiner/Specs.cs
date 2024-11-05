@@ -2,8 +2,6 @@
 
 using MathNet.Numerics.LinearAlgebra;
 
-using SharpMiner.Core;
-
 namespace SharpMiner
 {
     /// <summary>

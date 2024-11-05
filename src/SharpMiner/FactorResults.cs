@@ -11,15 +11,21 @@ namespace SharpMiner
         /// Initialise the factor results class 
         /// </summary>
         /// <param name="explainedVariance"></param>
+        /// <param name="cumulativeExplainedVariance"></param>
         /// <param name="coordinates"></param>
         /// <param name="squaredCosinus"></param>
         /// <param name="contributions"></param>
-        public FactorResults(Vector<double> explainedVariance, Matrix<double> coordinates, Matrix<double> squaredCosinus, Matrix<double> contributions) 
+        internal FactorResults(Vector<double> explainedVariance, 
+                                Vector<double> cumulativeExplainedVariance,
+                                Matrix<double> coordinates, 
+                                Matrix<double> squaredCosinus, 
+                                Matrix<double> contributions) 
         { 
             Coordinates = coordinates;
             SquaredCosinus = squaredCosinus;
             Contributions = contributions;
             ExplainedVariance = explainedVariance;
+            CumulativeExplainedVariance = cumulativeExplainedVariance;
         }
         /// <summary>
         /// Represents the coordinates of a Principal Component Analysis (PCA).
@@ -58,14 +64,6 @@ namespace SharpMiner
         /// <summary>
         /// Get the cumulative sum of explained variance
         /// </summary>
-        public Vector<double> CumulativeExplainedVariance
-        {
-            get
-            {
-                if (ExplainedVariance == null)
-                    return null;
-                return StatsHelper.CumulativeSum(ExplainedVariance);
-            }
-        }
+        public Vector<double> CumulativeExplainedVariance { get; }
     }
 }
