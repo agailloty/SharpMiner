@@ -2,13 +2,17 @@
 using System.Globalization;
 using SharpMiner.Graphics;
 using MathNet.Numerics.Data.Text;
+using System.Data;
 
 string csvFilePath = "Datasets/indicators.csv";
 var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
 var data = DataSetLoader.LoadFromCsvFile(csvFilePath, provider);
 string urlPath = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators_numerics.csv";
+string indicator_mixed = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators.csv";
 var remoteData = DataSetLoader.LoadCsvFromRemoteFile(urlPath, provider);
+
+DataTable indicators = DataSetLoader.LoadDataTableCsvFromRemoteFile(indicator_mixed);
 
 if (data != null)
 {
