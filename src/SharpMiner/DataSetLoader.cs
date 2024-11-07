@@ -8,18 +8,34 @@ using MathNet.Numerics.Data.Text;
 
 using MathNet.Numerics.LinearAlgebra;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpMiner
 {
     /// <summary>
-    /// This class contains helper method to read a dataset
+    /// This class contains helper methods to read a dataset.
     /// </summary>
     public static class DataSetLoader
     {
+        /// <summary>
+        /// Loads a DataTable from a CSV file.
+        /// </summary>
+        /// <param name="fileName">The path to the CSV file.</param>
+        /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
+        /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        /// <returns>A DataTable containing the data from the CSV file.</returns>
         public static DataTable LoadDataTableFromCsvFile(string fileName,
-                                                bool hasHeaders = true,
-                                                string delimiter = ",")
+                                                       bool hasHeaders = true,
+                                                       string delimiter = ",",
+                                                       NumberFormatInfo numberProvider = null)
         {
+            if (numberProvider == null)
+            {
+                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            }
+
             var dataTable = new DataTable();
             using (var reader = new StreamReader(fileName))
             {
@@ -33,13 +49,25 @@ namespace SharpMiner
                     }
                 }
 
+                var sampleRows = new List<string[]>();
+                var allRows = new List<string[]>();
                 while (!reader.EndOfStream)
                 {
-                    var values = ParseCsvLine(reader.ReadLine(), delimiter);
+                    var row = ParseCsvLine(reader.ReadLine(), delimiter);
+                    allRows.Add(row);
+                }
+
+                int typeInferenceRows = (int)(allRows.Count * 0.2);
+                sampleRows.AddRange(allRows.Take(typeInferenceRows));
+
+                InferColumnTypes(dataTable, sampleRows, numberProvider);
+
+                foreach (var values in allRows)
+                {
                     var row = dataTable.NewRow();
                     for (int i = 0; i < values.Length; i++)
                     {
-                        row[i] = values[i];
+                        row[i] = Convert.ChangeType(values[i], dataTable.Columns[i].DataType, numberProvider);
                     }
                     dataTable.Rows.Add(row);
                 }
@@ -47,10 +75,24 @@ namespace SharpMiner
             return dataTable;
         }
 
+        /// <summary>
+        /// Loads a DataTable from a remote CSV file.
+        /// </summary>
+        /// <param name="url">The URL of the remote CSV file.</param>
+        /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
+        /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        /// <returns>A DataTable containing the data from the remote CSV file.</returns>
         public static DataTable LoadDataTableCsvFromRemoteFile(string url,
-                                                        bool hasHeaders = true,
-                                                        string delimiter = ",")
+                                                               bool hasHeaders = true,
+                                                               string delimiter = ",",
+                                                               NumberFormatInfo numberProvider = null)
         {
+            if (numberProvider == null)
+            {
+                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            }
+
             var dataTable = new DataTable();
             using (HttpClient client = new HttpClient())
             {
@@ -70,13 +112,33 @@ namespace SharpMiner
                         }
                     }
 
+                    var sampleRows = new List<string[]>();
+                    var allRows = new List<string[]>();
                     while (reader.Peek() > -1)
                     {
-                        var values = ParseCsvLine(reader.ReadLine(), delimiter);
+                        var row = ParseCsvLine(reader.ReadLine(), delimiter);
+                        allRows.Add(row);
+                    }
+
+                    int typeInferenceRows = (int)(allRows.Count * 0.2);
+                    sampleRows.AddRange(allRows.Take(typeInferenceRows));
+
+                    InferColumnTypes(dataTable, sampleRows, numberProvider);
+
+                    foreach (var values in allRows)
+                    {
                         var row = dataTable.NewRow();
+
                         for (int i = 0; i < values.Length; i++)
                         {
-                            row[i] = values[i];
+                            if (dataTable.Columns[i].DataType == typeof(double))
+                            {
+                                row[i] = double.Parse(values[i], numberProvider);
+                            }
+                            else
+                            {
+                                row[i] = values[i];
+                            }
                         }
                         dataTable.Rows.Add(row);
                     }
@@ -85,6 +147,48 @@ namespace SharpMiner
             return dataTable;
         }
 
+        /// <summary>
+        /// Infers the column types of a DataTable based on sample rows.
+        /// </summary>
+        /// <param name="dataTable">The DataTable to infer column types for.</param>
+        /// <param name="sampleRows">The sample rows to use for type inference.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        private static void InferColumnTypes(DataTable dataTable, List<string[]> sampleRows, NumberFormatInfo numberProvider)
+        {
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                int doubleCount = 0;
+                int stringCount = 0;
+
+                foreach (var row in sampleRows)
+                {
+                    if (double.TryParse(row[i], NumberStyles.Float | NumberStyles.AllowExponent, numberProvider, out _))
+                    {
+                        doubleCount++;
+                    }
+                    else
+                    {
+                        stringCount++;
+                    }
+                }
+
+                if (doubleCount > stringCount)
+                {
+                    dataTable.Columns[i].DataType = typeof(double);
+                }
+                else
+                {
+                    dataTable.Columns[i].DataType = typeof(string);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Parses a line of CSV into an array of strings.
+        /// </summary>
+        /// <param name="line">The CSV line to parse.</param>
+        /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <returns>An array of strings representing the values in the CSV line.</returns>
         private static string[] ParseCsvLine(string line, string delimiter)
         {
             var pattern = string.Format("(?<=^|{0})(\"(?:[^\"]|\"\")*\"|[^{0}]*)", delimiter);
@@ -97,24 +201,22 @@ namespace SharpMiner
             return values;
         }
 
-
-
         /// <summary>
-        /// Create a dataset instance from CSV file
+        /// Creates a dataset instance from a CSV file.
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="numberProvider"></param>
-        /// <param name="hasHeaders"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static Matrix<double> LoadFromCsvFile(string fileName, 
-                                                     NumberFormatInfo numberProvider = null, 
-                                                     bool hasHeaders = true, 
-                                                     string delimiter = ",") 
+        /// <param name="fileName">The path to the CSV file.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
+        /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <returns>A Matrix containing the data from the CSV file.</returns>
+        public static Matrix<double> LoadFromCsvFile(string fileName,
+                                                     NumberFormatInfo numberProvider = null,
+                                                     bool hasHeaders = true,
+                                                     string delimiter = ",")
         {
             if (numberProvider == null)
             {
-                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "."};
+                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "." };
             }
 
             Matrix<double> data = DelimitedReader.Read<double>(filePath: fileName, delimiter: delimiter, formatProvider: numberProvider, hasHeaders: hasHeaders);
@@ -123,13 +225,13 @@ namespace SharpMiner
         }
 
         /// <summary>
-        /// Create a dataset instance from a remote CSV file
+        /// Creates a dataset instance from a remote CSV file.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="numberProvider"></param>
-        /// <param name="hasHeaders"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
+        /// <param name="url">The URL of the remote CSV file.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
+        /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <returns>A Matrix containing the data from the remote CSV file.</returns>
         public static Matrix<double> LoadCsvFromRemoteFile(string url,
                                                      NumberFormatInfo numberProvider = null,
                                                      bool hasHeaders = true,
