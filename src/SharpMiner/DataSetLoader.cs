@@ -25,11 +25,15 @@ namespace SharpMiner
         /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
         /// <param name="delimiter">The delimiter used in the CSV file.</param>
         /// <param name="numberProvider">The number format provider.</param>
-        /// <returns>A DataTable containing the data from the CSV file.</returns>
+        /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
+        /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
+        /// <returns>A DataTable containing the data from the remote CSV file.</returns>
         public static DataTable LoadDataTableFromCsvFile(string fileName,
-                                                       bool hasHeaders = true,
-                                                       string delimiter = ",",
-                                                       NumberFormatInfo numberProvider = null)
+                                                 bool hasHeaders = true,
+                                                 string delimiter = ",",
+                                                 NumberFormatInfo numberProvider = null,
+                                                 string[] oneHotEncodedColumns = null,
+                                                 string[] labelEncodedColumns = null)
         {
             if (numberProvider == null)
             {
@@ -40,17 +44,26 @@ namespace SharpMiner
             using (var reader = new StreamReader(fileName))
             {
                 string[] headers = null;
-                if (hasHeaders)
-                {
-                    headers = ParseCsvLine(reader.ReadLine(), delimiter);
-                    foreach (var header in headers)
-                    {
-                        dataTable.Columns.Add(header);
-                    }
-                }
+                string[] firstLine = ParseCsvLine(reader.ReadLine(), delimiter);
 
                 var sampleRows = new List<string[]>();
                 var allRows = new List<string[]>();
+
+                if (hasHeaders)
+                {
+                    headers = firstLine;
+                } 
+                else
+                {
+                    headers = Enumerable.Range(1, firstLine.Length).Select(i => "X" + i).ToArray();
+                    allRows.Add(firstLine);
+                }
+
+                foreach (var header in headers)
+                {
+                    dataTable.Columns.Add(header);
+                }
+
                 while (!reader.EndOfStream)
                 {
                     var row = ParseCsvLine(reader.ReadLine(), delimiter);
@@ -65,13 +78,46 @@ namespace SharpMiner
                 foreach (var values in allRows)
                 {
                     var row = dataTable.NewRow();
+
                     for (int i = 0; i < values.Length; i++)
                     {
-                        row[i] = Convert.ChangeType(values[i], dataTable.Columns[i].DataType, numberProvider);
+                        if (dataTable.Columns[i].DataType == typeof(double))
+                        {
+                            row[i] = double.Parse(values[i], numberProvider);
+                        }
+                        else
+                        {
+                            row[i] = values[i];
+                        }
                     }
                     dataTable.Rows.Add(row);
                 }
             }
+            if (oneHotEncodedColumns != null)
+            {
+                foreach (var column in oneHotEncodedColumns)
+                {
+                    DataColumn col = dataTable.Columns[column];
+                    if (col != null && col.DataType == typeof(string))
+                    {
+                        CreateOneHotEncodedColumns(dataTable, col);
+                        dataTable.Columns.Remove(col);
+                    }
+                }
+            }
+
+            if (labelEncodedColumns != null)
+            {
+                foreach (var column in labelEncodedColumns)
+                {
+                    DataColumn col = dataTable.Columns[column];
+                    if (col != null && col.DataType == typeof(string))
+                    {
+                        CreateLabelEncodedColumn(dataTable, col);
+                    }
+                }
+            }
+
             return dataTable;
         }
 
@@ -82,11 +128,14 @@ namespace SharpMiner
         /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
         /// <param name="delimiter">The delimiter used in the CSV file.</param>
         /// <param name="numberProvider">The number format provider.</param>
+        /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
+        /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A DataTable containing the data from the remote CSV file.</returns>
         public static DataTable LoadDataTableCsvFromRemoteFile(string url,
                                                                bool hasHeaders = true,
                                                                string delimiter = ",",
-                                                               NumberFormatInfo numberProvider = null)
+                                                               NumberFormatInfo numberProvider = null, 
+                                                               string[] oneHotEncodedColumns = null, string[] labelEncodedColumns = null)
         {
             if (numberProvider == null)
             {
@@ -103,17 +152,25 @@ namespace SharpMiner
                 using (var reader = new StringReader(csvContent))
                 {
                     string[] headers = null;
-                    if (hasHeaders)
-                    {
-                        headers = ParseCsvLine(reader.ReadLine(), delimiter);
-                        foreach (var header in headers)
-                        {
-                            dataTable.Columns.Add(header);
-                        }
-                    }
+                    string[] firstLine = ParseCsvLine(reader.ReadLine(), delimiter);
 
                     var sampleRows = new List<string[]>();
                     var allRows = new List<string[]>();
+
+                    if (hasHeaders)
+                    {
+                        headers = firstLine;
+                    }
+                    else
+                    {
+                        headers = Enumerable.Range(1, firstLine.Length).Select(i => "X" + i).ToArray();
+                        allRows.Add(firstLine);
+                    }
+
+                    foreach (var header in headers)
+                    {
+                        dataTable.Columns.Add(header);
+                    }
                     while (reader.Peek() > -1)
                     {
                         var row = ParseCsvLine(reader.ReadLine(), delimiter);
@@ -141,6 +198,30 @@ namespace SharpMiner
                             }
                         }
                         dataTable.Rows.Add(row);
+                    }
+                }
+                if (oneHotEncodedColumns != null)
+                {
+                    foreach (var column in oneHotEncodedColumns)
+                    {
+                        DataColumn col = dataTable.Columns[column];
+                        if (col != null && col.DataType == typeof(string))
+                        {
+                            CreateOneHotEncodedColumns(dataTable, col);
+                            dataTable.Columns.Remove(col);
+                        }
+                    }
+                }
+
+                if (labelEncodedColumns != null)
+                {
+                    foreach (var column in labelEncodedColumns)
+                    {
+                        DataColumn col = dataTable.Columns[column];
+                        if (col != null && col.DataType == typeof(string))
+                        {
+                            CreateLabelEncodedColumn(dataTable, col);
+                        }
                     }
                 }
             }
@@ -252,6 +333,61 @@ namespace SharpMiner
                     var data = DelimitedReader.Read<double>(reader, delimiter: delimiter, hasHeaders: hasHeaders, formatProvider: numberProvider);
                     return data;
                 }
+            }
+        }
+
+        private static void CreateOneHotEncodedColumns(DataTable dataTable, DataColumn column)
+        {
+            string[] values = new string[dataTable.Rows.Count];
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                values[i] = dataTable.Rows[i][column].ToString();
+            }
+
+            string[] uniqueValues = values.Distinct().ToArray();
+
+            List<int[]> encodedColumns = new List<int[]>();
+
+            foreach (string modality in uniqueValues)
+            {
+                string modalityName = column.ColumnName + "_" + modality;
+                dataTable.Columns.Add(modalityName, typeof(int));
+
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    dataTable.Rows[i][modalityName] = values[i] == modality ? 1 : 0;
+                }
+            }
+        }
+
+        private static void CreateLabelEncodedColumn(DataTable dataTable, DataColumn column)
+        {
+            string[] values = new string[dataTable.Rows.Count];
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                values[i] = dataTable.Rows[i][column].ToString();
+            }
+
+            string[] uniqueValues = values.Distinct().ToArray();
+
+            int[] encodedColumns = Enumerable.Range(1, uniqueValues.Length).ToArray();
+
+            Dictionary<string, int> encoding = new Dictionary<string, int>();
+
+            for (int i = 0; i < uniqueValues.Length; i++)
+            {
+                encoding.Add(uniqueValues[i], encodedColumns[i]);
+            }
+
+            string columnName = column.ColumnName;
+            dataTable.Columns.Remove(column);
+            dataTable.Columns.Add(columnName, typeof(int));
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                dataTable.Rows[i][columnName] = encoding[values[i]];
             }
         }
     }

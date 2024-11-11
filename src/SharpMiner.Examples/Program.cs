@@ -5,14 +5,22 @@ using MathNet.Numerics.Data.Text;
 using System.Data;
 
 string csvFilePath = "Datasets/indicators.csv";
+string indicator_mixed = "Datasets/indicators_mixed.csv";
+string indicator_headless = "Datasets/indicators-headless.csv";
 var provider = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
 var data = DataSetLoader.LoadFromCsvFile(csvFilePath, provider);
 string urlPath = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators_numerics.csv";
-string indicator_mixed = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators.csv";
+string indicator_mixed_url = "https://raw.githubusercontent.com/agailloty/Outils-Analyses-R/refs/heads/main/dataset/indicators.csv";
 var remoteData = DataSetLoader.LoadCsvFromRemoteFile(urlPath, provider);
 
-DataTable indicators = DataSetLoader.LoadDataTableCsvFromRemoteFile(indicator_mixed);
+string[] oneHotColumns = { "REGION", "INCOME_GROUP" };
+string[] labelEncodedCol = { "COUNTRY" };
+
+DataTable indicators_mixed_online = DataSetLoader.LoadDataTableCsvFromRemoteFile(indicator_mixed_url, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol);
+DataTable indicators_mixed_local = DataSetLoader.LoadDataTableFromCsvFile(indicator_mixed, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol);
+DataTable indicators_headless_local = DataSetLoader.LoadDataTableFromCsvFile(indicator_headless, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol, hasHeaders: false);
+
 
 if (data != null)
 {
