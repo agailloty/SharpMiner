@@ -1,0 +1,616 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: SharpMiner
+  name: SharpMiner
+  href: api/SharpMiner.html
+  commentId: N:SharpMiner
+  fullName: SharpMiner
+  nameWithType: SharpMiner
+- uid: SharpMiner.Component
+  name: Component
+  href: api/SharpMiner.Component.html
+  commentId: T:SharpMiner.Component
+  fullName: SharpMiner.Component
+  nameWithType: Component
+- uid: SharpMiner.Component.#ctor(System.Int32,System.Double,SharpMiner.FactorResults,SharpMiner.FactorResults)
+  name: Component(int, double, FactorResults, FactorResults)
+  href: api/SharpMiner.Component.html#SharpMiner_Component__ctor_System_Int32_System_Double_SharpMiner_FactorResults_SharpMiner_FactorResults_
+  commentId: M:SharpMiner.Component.#ctor(System.Int32,System.Double,SharpMiner.FactorResults,SharpMiner.FactorResults)
+  name.vb: New(Integer, Double, FactorResults, FactorResults)
+  fullName: SharpMiner.Component.Component(int, double, SharpMiner.FactorResults, SharpMiner.FactorResults)
+  fullName.vb: SharpMiner.Component.New(Integer, Double, SharpMiner.FactorResults, SharpMiner.FactorResults)
+  nameWithType: Component.Component(int, double, FactorResults, FactorResults)
+  nameWithType.vb: Component.New(Integer, Double, FactorResults, FactorResults)
+- uid: SharpMiner.Component.#ctor*
+  name: Component
+  href: api/SharpMiner.Component.html#SharpMiner_Component__ctor_
+  commentId: Overload:SharpMiner.Component.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: SharpMiner.Component.Component
+  fullName.vb: SharpMiner.Component.New
+  nameWithType: Component.Component
+  nameWithType.vb: Component.New
+- uid: SharpMiner.Component.FeaturesResults
+  name: FeaturesResults
+  href: api/SharpMiner.Component.html#SharpMiner_Component_FeaturesResults
+  commentId: P:SharpMiner.Component.FeaturesResults
+  fullName: SharpMiner.Component.FeaturesResults
+  nameWithType: Component.FeaturesResults
+- uid: SharpMiner.Component.FeaturesResults*
+  name: FeaturesResults
+  href: api/SharpMiner.Component.html#SharpMiner_Component_FeaturesResults_
+  commentId: Overload:SharpMiner.Component.FeaturesResults
+  isSpec: "True"
+  fullName: SharpMiner.Component.FeaturesResults
+  nameWithType: Component.FeaturesResults
+- uid: SharpMiner.Component.PercentExplainedVariance
+  name: PercentExplainedVariance
+  href: api/SharpMiner.Component.html#SharpMiner_Component_PercentExplainedVariance
+  commentId: P:SharpMiner.Component.PercentExplainedVariance
+  fullName: SharpMiner.Component.PercentExplainedVariance
+  nameWithType: Component.PercentExplainedVariance
+- uid: SharpMiner.Component.PercentExplainedVariance*
+  name: PercentExplainedVariance
+  href: api/SharpMiner.Component.html#SharpMiner_Component_PercentExplainedVariance_
+  commentId: Overload:SharpMiner.Component.PercentExplainedVariance
+  isSpec: "True"
+  fullName: SharpMiner.Component.PercentExplainedVariance
+  nameWithType: Component.PercentExplainedVariance
+- uid: SharpMiner.Component.Rank
+  name: Rank
+  href: api/SharpMiner.Component.html#SharpMiner_Component_Rank
+  commentId: P:SharpMiner.Component.Rank
+  fullName: SharpMiner.Component.Rank
+  nameWithType: Component.Rank
+- uid: SharpMiner.Component.Rank*
+  name: Rank
+  href: api/SharpMiner.Component.html#SharpMiner_Component_Rank_
+  commentId: Overload:SharpMiner.Component.Rank
+  isSpec: "True"
+  fullName: SharpMiner.Component.Rank
+  nameWithType: Component.Rank
+- uid: SharpMiner.Component.RowsResults
+  name: RowsResults
+  href: api/SharpMiner.Component.html#SharpMiner_Component_RowsResults
+  commentId: P:SharpMiner.Component.RowsResults
+  fullName: SharpMiner.Component.RowsResults
+  nameWithType: Component.RowsResults
+- uid: SharpMiner.Component.RowsResults*
+  name: RowsResults
+  href: api/SharpMiner.Component.html#SharpMiner_Component_RowsResults_
+  commentId: Overload:SharpMiner.Component.RowsResults
+  isSpec: "True"
+  fullName: SharpMiner.Component.RowsResults
+  nameWithType: Component.RowsResults
+- uid: SharpMiner.DataSetLoader
+  name: DataSetLoader
+  href: api/SharpMiner.DataSetLoader.html
+  commentId: T:SharpMiner.DataSetLoader
+  fullName: SharpMiner.DataSetLoader
+  nameWithType: DataSetLoader
+- uid: SharpMiner.DataSetLoader.ConvertToMatrix(System.Data.DataTable)
+  name: ConvertToMatrix(DataTable)
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_ConvertToMatrix_System_Data_DataTable_
+  commentId: M:SharpMiner.DataSetLoader.ConvertToMatrix(System.Data.DataTable)
+  fullName: SharpMiner.DataSetLoader.ConvertToMatrix(System.Data.DataTable)
+  nameWithType: DataSetLoader.ConvertToMatrix(DataTable)
+- uid: SharpMiner.DataSetLoader.ConvertToMatrix*
+  name: ConvertToMatrix
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_ConvertToMatrix_
+  commentId: Overload:SharpMiner.DataSetLoader.ConvertToMatrix
+  isSpec: "True"
+  fullName: SharpMiner.DataSetLoader.ConvertToMatrix
+  nameWithType: DataSetLoader.ConvertToMatrix
+- uid: SharpMiner.DataSetLoader.LoadCsvFromRemoteFile(System.String,System.Globalization.NumberFormatInfo,System.Boolean,System.String)
+  name: LoadCsvFromRemoteFile(string, NumberFormatInfo, bool, string)
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadCsvFromRemoteFile_System_String_System_Globalization_NumberFormatInfo_System_Boolean_System_String_
+  commentId: M:SharpMiner.DataSetLoader.LoadCsvFromRemoteFile(System.String,System.Globalization.NumberFormatInfo,System.Boolean,System.String)
+  name.vb: LoadCsvFromRemoteFile(String, NumberFormatInfo, Boolean, String)
+  fullName: SharpMiner.DataSetLoader.LoadCsvFromRemoteFile(string, System.Globalization.NumberFormatInfo, bool, string)
+  fullName.vb: SharpMiner.DataSetLoader.LoadCsvFromRemoteFile(String, System.Globalization.NumberFormatInfo, Boolean, String)
+  nameWithType: DataSetLoader.LoadCsvFromRemoteFile(string, NumberFormatInfo, bool, string)
+  nameWithType.vb: DataSetLoader.LoadCsvFromRemoteFile(String, NumberFormatInfo, Boolean, String)
+- uid: SharpMiner.DataSetLoader.LoadCsvFromRemoteFile*
+  name: LoadCsvFromRemoteFile
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadCsvFromRemoteFile_
+  commentId: Overload:SharpMiner.DataSetLoader.LoadCsvFromRemoteFile
+  isSpec: "True"
+  fullName: SharpMiner.DataSetLoader.LoadCsvFromRemoteFile
+  nameWithType: DataSetLoader.LoadCsvFromRemoteFile
+- uid: SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile(System.String,System.Boolean,System.String,System.Globalization.NumberFormatInfo,System.String[],System.String[])
+  name: LoadDataTableCsvFromRemoteFile(string, bool, string, NumberFormatInfo, string[], string[])
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadDataTableCsvFromRemoteFile_System_String_System_Boolean_System_String_System_Globalization_NumberFormatInfo_System_String___System_String___
+  commentId: M:SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile(System.String,System.Boolean,System.String,System.Globalization.NumberFormatInfo,System.String[],System.String[])
+  name.vb: LoadDataTableCsvFromRemoteFile(String, Boolean, String, NumberFormatInfo, String(), String())
+  fullName: SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile(string, bool, string, System.Globalization.NumberFormatInfo, string[], string[])
+  fullName.vb: SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile(String, Boolean, String, System.Globalization.NumberFormatInfo, String(), String())
+  nameWithType: DataSetLoader.LoadDataTableCsvFromRemoteFile(string, bool, string, NumberFormatInfo, string[], string[])
+  nameWithType.vb: DataSetLoader.LoadDataTableCsvFromRemoteFile(String, Boolean, String, NumberFormatInfo, String(), String())
+- uid: SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile*
+  name: LoadDataTableCsvFromRemoteFile
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadDataTableCsvFromRemoteFile_
+  commentId: Overload:SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile
+  isSpec: "True"
+  fullName: SharpMiner.DataSetLoader.LoadDataTableCsvFromRemoteFile
+  nameWithType: DataSetLoader.LoadDataTableCsvFromRemoteFile
+- uid: SharpMiner.DataSetLoader.LoadDataTableFromCsvFile(System.String,System.Boolean,System.String,System.Globalization.NumberFormatInfo,System.String[],System.String[])
+  name: LoadDataTableFromCsvFile(string, bool, string, NumberFormatInfo, string[], string[])
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadDataTableFromCsvFile_System_String_System_Boolean_System_String_System_Globalization_NumberFormatInfo_System_String___System_String___
+  commentId: M:SharpMiner.DataSetLoader.LoadDataTableFromCsvFile(System.String,System.Boolean,System.String,System.Globalization.NumberFormatInfo,System.String[],System.String[])
+  name.vb: LoadDataTableFromCsvFile(String, Boolean, String, NumberFormatInfo, String(), String())
+  fullName: SharpMiner.DataSetLoader.LoadDataTableFromCsvFile(string, bool, string, System.Globalization.NumberFormatInfo, string[], string[])
+  fullName.vb: SharpMiner.DataSetLoader.LoadDataTableFromCsvFile(String, Boolean, String, System.Globalization.NumberFormatInfo, String(), String())
+  nameWithType: DataSetLoader.LoadDataTableFromCsvFile(string, bool, string, NumberFormatInfo, string[], string[])
+  nameWithType.vb: DataSetLoader.LoadDataTableFromCsvFile(String, Boolean, String, NumberFormatInfo, String(), String())
+- uid: SharpMiner.DataSetLoader.LoadDataTableFromCsvFile*
+  name: LoadDataTableFromCsvFile
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadDataTableFromCsvFile_
+  commentId: Overload:SharpMiner.DataSetLoader.LoadDataTableFromCsvFile
+  isSpec: "True"
+  fullName: SharpMiner.DataSetLoader.LoadDataTableFromCsvFile
+  nameWithType: DataSetLoader.LoadDataTableFromCsvFile
+- uid: SharpMiner.DataSetLoader.LoadFromCsvFile(System.String,System.Globalization.NumberFormatInfo,System.Boolean,System.String)
+  name: LoadFromCsvFile(string, NumberFormatInfo, bool, string)
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadFromCsvFile_System_String_System_Globalization_NumberFormatInfo_System_Boolean_System_String_
+  commentId: M:SharpMiner.DataSetLoader.LoadFromCsvFile(System.String,System.Globalization.NumberFormatInfo,System.Boolean,System.String)
+  name.vb: LoadFromCsvFile(String, NumberFormatInfo, Boolean, String)
+  fullName: SharpMiner.DataSetLoader.LoadFromCsvFile(string, System.Globalization.NumberFormatInfo, bool, string)
+  fullName.vb: SharpMiner.DataSetLoader.LoadFromCsvFile(String, System.Globalization.NumberFormatInfo, Boolean, String)
+  nameWithType: DataSetLoader.LoadFromCsvFile(string, NumberFormatInfo, bool, string)
+  nameWithType.vb: DataSetLoader.LoadFromCsvFile(String, NumberFormatInfo, Boolean, String)
+- uid: SharpMiner.DataSetLoader.LoadFromCsvFile*
+  name: LoadFromCsvFile
+  href: api/SharpMiner.DataSetLoader.html#SharpMiner_DataSetLoader_LoadFromCsvFile_
+  commentId: Overload:SharpMiner.DataSetLoader.LoadFromCsvFile
+  isSpec: "True"
+  fullName: SharpMiner.DataSetLoader.LoadFromCsvFile
+  nameWithType: DataSetLoader.LoadFromCsvFile
+- uid: SharpMiner.DecompositionMethod
+  name: DecompositionMethod
+  href: api/SharpMiner.DecompositionMethod.html
+  commentId: T:SharpMiner.DecompositionMethod
+  fullName: SharpMiner.DecompositionMethod
+  nameWithType: DecompositionMethod
+- uid: SharpMiner.DecompositionMethod.Svd
+  name: Svd
+  href: api/SharpMiner.DecompositionMethod.html#SharpMiner_DecompositionMethod_Svd
+  commentId: F:SharpMiner.DecompositionMethod.Svd
+  fullName: SharpMiner.DecompositionMethod.Svd
+  nameWithType: DecompositionMethod.Svd
+- uid: SharpMiner.FactorMethod
+  name: FactorMethod
+  href: api/SharpMiner.FactorMethod.html
+  commentId: T:SharpMiner.FactorMethod
+  fullName: SharpMiner.FactorMethod
+  nameWithType: FactorMethod
+- uid: SharpMiner.FactorMethod.MCA
+  name: MCA
+  href: api/SharpMiner.FactorMethod.html#SharpMiner_FactorMethod_MCA
+  commentId: F:SharpMiner.FactorMethod.MCA
+  fullName: SharpMiner.FactorMethod.MCA
+  nameWithType: FactorMethod.MCA
+- uid: SharpMiner.FactorMethod.PCA
+  name: PCA
+  href: api/SharpMiner.FactorMethod.html#SharpMiner_FactorMethod_PCA
+  commentId: F:SharpMiner.FactorMethod.PCA
+  fullName: SharpMiner.FactorMethod.PCA
+  nameWithType: FactorMethod.PCA
+- uid: SharpMiner.FactorResults
+  name: FactorResults
+  href: api/SharpMiner.FactorResults.html
+  commentId: T:SharpMiner.FactorResults
+  fullName: SharpMiner.FactorResults
+  nameWithType: FactorResults
+- uid: SharpMiner.FactorResults.Contributions
+  name: Contributions
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_Contributions
+  commentId: P:SharpMiner.FactorResults.Contributions
+  fullName: SharpMiner.FactorResults.Contributions
+  nameWithType: FactorResults.Contributions
+- uid: SharpMiner.FactorResults.Contributions*
+  name: Contributions
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_Contributions_
+  commentId: Overload:SharpMiner.FactorResults.Contributions
+  isSpec: "True"
+  fullName: SharpMiner.FactorResults.Contributions
+  nameWithType: FactorResults.Contributions
+- uid: SharpMiner.FactorResults.Coordinates
+  name: Coordinates
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_Coordinates
+  commentId: P:SharpMiner.FactorResults.Coordinates
+  fullName: SharpMiner.FactorResults.Coordinates
+  nameWithType: FactorResults.Coordinates
+- uid: SharpMiner.FactorResults.Coordinates*
+  name: Coordinates
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_Coordinates_
+  commentId: Overload:SharpMiner.FactorResults.Coordinates
+  isSpec: "True"
+  fullName: SharpMiner.FactorResults.Coordinates
+  nameWithType: FactorResults.Coordinates
+- uid: SharpMiner.FactorResults.CumulativeExplainedVariance
+  name: CumulativeExplainedVariance
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_CumulativeExplainedVariance
+  commentId: P:SharpMiner.FactorResults.CumulativeExplainedVariance
+  fullName: SharpMiner.FactorResults.CumulativeExplainedVariance
+  nameWithType: FactorResults.CumulativeExplainedVariance
+- uid: SharpMiner.FactorResults.CumulativeExplainedVariance*
+  name: CumulativeExplainedVariance
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_CumulativeExplainedVariance_
+  commentId: Overload:SharpMiner.FactorResults.CumulativeExplainedVariance
+  isSpec: "True"
+  fullName: SharpMiner.FactorResults.CumulativeExplainedVariance
+  nameWithType: FactorResults.CumulativeExplainedVariance
+- uid: SharpMiner.FactorResults.ExplainedVariance
+  name: ExplainedVariance
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_ExplainedVariance
+  commentId: P:SharpMiner.FactorResults.ExplainedVariance
+  fullName: SharpMiner.FactorResults.ExplainedVariance
+  nameWithType: FactorResults.ExplainedVariance
+- uid: SharpMiner.FactorResults.ExplainedVariance*
+  name: ExplainedVariance
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_ExplainedVariance_
+  commentId: Overload:SharpMiner.FactorResults.ExplainedVariance
+  isSpec: "True"
+  fullName: SharpMiner.FactorResults.ExplainedVariance
+  nameWithType: FactorResults.ExplainedVariance
+- uid: SharpMiner.FactorResults.SquaredCosinus
+  name: SquaredCosinus
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_SquaredCosinus
+  commentId: P:SharpMiner.FactorResults.SquaredCosinus
+  fullName: SharpMiner.FactorResults.SquaredCosinus
+  nameWithType: FactorResults.SquaredCosinus
+- uid: SharpMiner.FactorResults.SquaredCosinus*
+  name: SquaredCosinus
+  href: api/SharpMiner.FactorResults.html#SharpMiner_FactorResults_SquaredCosinus_
+  commentId: Overload:SharpMiner.FactorResults.SquaredCosinus
+  isSpec: "True"
+  fullName: SharpMiner.FactorResults.SquaredCosinus
+  nameWithType: FactorResults.SquaredCosinus
+- uid: SharpMiner.Graphics
+  name: SharpMiner.Graphics
+  href: api/SharpMiner.Graphics.html
+  commentId: N:SharpMiner.Graphics
+  fullName: SharpMiner.Graphics
+  nameWithType: SharpMiner.Graphics
+- uid: SharpMiner.Graphics.Visualisations
+  name: Visualisations
+  href: api/SharpMiner.Graphics.Visualisations.html
+  commentId: T:SharpMiner.Graphics.Visualisations
+  fullName: SharpMiner.Graphics.Visualisations
+  nameWithType: Visualisations
+- uid: SharpMiner.Graphics.Visualisations.CorrelationCircle(System.ValueTuple{System.Double,System.Double}[],System.Nullable{System.ValueTuple{System.SByte,System.SByte}})
+  name: CorrelationCircle((double, double)[], (sbyte, sbyte)?)
+  href: api/SharpMiner.Graphics.Visualisations.html#SharpMiner_Graphics_Visualisations_CorrelationCircle_System_ValueTuple_System_Double_System_Double____System_Nullable_System_ValueTuple_System_SByte_System_SByte___
+  commentId: M:SharpMiner.Graphics.Visualisations.CorrelationCircle(System.ValueTuple{System.Double,System.Double}[],System.Nullable{System.ValueTuple{System.SByte,System.SByte}})
+  name.vb: CorrelationCircle((Double, Double)(), (SByte, SByte)?)
+  fullName: SharpMiner.Graphics.Visualisations.CorrelationCircle((double, double)[], (sbyte, sbyte)?)
+  fullName.vb: SharpMiner.Graphics.Visualisations.CorrelationCircle((Double, Double)(), (SByte, SByte)?)
+  nameWithType: Visualisations.CorrelationCircle((double, double)[], (sbyte, sbyte)?)
+  nameWithType.vb: Visualisations.CorrelationCircle((Double, Double)(), (SByte, SByte)?)
+- uid: SharpMiner.Graphics.Visualisations.CorrelationCircle*
+  name: CorrelationCircle
+  href: api/SharpMiner.Graphics.Visualisations.html#SharpMiner_Graphics_Visualisations_CorrelationCircle_
+  commentId: Overload:SharpMiner.Graphics.Visualisations.CorrelationCircle
+  isSpec: "True"
+  fullName: SharpMiner.Graphics.Visualisations.CorrelationCircle
+  nameWithType: Visualisations.CorrelationCircle
+- uid: SharpMiner.Graphics.Visualisations.ScreePlot(System.Double[])
+  name: ScreePlot(double[])
+  href: api/SharpMiner.Graphics.Visualisations.html#SharpMiner_Graphics_Visualisations_ScreePlot_System_Double___
+  commentId: M:SharpMiner.Graphics.Visualisations.ScreePlot(System.Double[])
+  name.vb: ScreePlot(Double())
+  fullName: SharpMiner.Graphics.Visualisations.ScreePlot(double[])
+  fullName.vb: SharpMiner.Graphics.Visualisations.ScreePlot(Double())
+  nameWithType: Visualisations.ScreePlot(double[])
+  nameWithType.vb: Visualisations.ScreePlot(Double())
+- uid: SharpMiner.Graphics.Visualisations.ScreePlot*
+  name: ScreePlot
+  href: api/SharpMiner.Graphics.Visualisations.html#SharpMiner_Graphics_Visualisations_ScreePlot_
+  commentId: Overload:SharpMiner.Graphics.Visualisations.ScreePlot
+  isSpec: "True"
+  fullName: SharpMiner.Graphics.Visualisations.ScreePlot
+  nameWithType: Visualisations.ScreePlot
+- uid: SharpMiner.MatrixHelper
+  name: MatrixHelper
+  href: api/SharpMiner.MatrixHelper.html
+  commentId: T:SharpMiner.MatrixHelper
+  fullName: SharpMiner.MatrixHelper
+  nameWithType: MatrixHelper
+- uid: SharpMiner.MatrixHelper.CenterAndScale(MathNet.Numerics.LinearAlgebra.Matrix{System.Double})
+  name: CenterAndScale(Matrix<double>)
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_CenterAndScale_MathNet_Numerics_LinearAlgebra_Matrix_System_Double__
+  commentId: M:SharpMiner.MatrixHelper.CenterAndScale(MathNet.Numerics.LinearAlgebra.Matrix{System.Double})
+  name.vb: CenterAndScale(Matrix(Of Double))
+  fullName: SharpMiner.MatrixHelper.CenterAndScale(MathNet.Numerics.LinearAlgebra.Matrix<double>)
+  fullName.vb: SharpMiner.MatrixHelper.CenterAndScale(MathNet.Numerics.LinearAlgebra.Matrix(Of Double))
+  nameWithType: MatrixHelper.CenterAndScale(Matrix<double>)
+  nameWithType.vb: MatrixHelper.CenterAndScale(Matrix(Of Double))
+- uid: SharpMiner.MatrixHelper.CenterAndScale*
+  name: CenterAndScale
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_CenterAndScale_
+  commentId: Overload:SharpMiner.MatrixHelper.CenterAndScale
+  isSpec: "True"
+  fullName: SharpMiner.MatrixHelper.CenterAndScale
+  nameWithType: MatrixHelper.CenterAndScale
+- uid: SharpMiner.MatrixHelper.ComputeCorrelationMatrix(MathNet.Numerics.LinearAlgebra.Matrix{System.Double})
+  name: ComputeCorrelationMatrix(Matrix<double>)
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_ComputeCorrelationMatrix_MathNet_Numerics_LinearAlgebra_Matrix_System_Double__
+  commentId: M:SharpMiner.MatrixHelper.ComputeCorrelationMatrix(MathNet.Numerics.LinearAlgebra.Matrix{System.Double})
+  name.vb: ComputeCorrelationMatrix(Matrix(Of Double))
+  fullName: SharpMiner.MatrixHelper.ComputeCorrelationMatrix(MathNet.Numerics.LinearAlgebra.Matrix<double>)
+  fullName.vb: SharpMiner.MatrixHelper.ComputeCorrelationMatrix(MathNet.Numerics.LinearAlgebra.Matrix(Of Double))
+  nameWithType: MatrixHelper.ComputeCorrelationMatrix(Matrix<double>)
+  nameWithType.vb: MatrixHelper.ComputeCorrelationMatrix(Matrix(Of Double))
+- uid: SharpMiner.MatrixHelper.ComputeCorrelationMatrix*
+  name: ComputeCorrelationMatrix
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_ComputeCorrelationMatrix_
+  commentId: Overload:SharpMiner.MatrixHelper.ComputeCorrelationMatrix
+  isSpec: "True"
+  fullName: SharpMiner.MatrixHelper.ComputeCorrelationMatrix
+  nameWithType: MatrixHelper.ComputeCorrelationMatrix
+- uid: SharpMiner.MatrixHelper.ComputeSignFlip(MathNet.Numerics.LinearAlgebra.Factorization.Svd{System.Double},MathNet.Numerics.LinearAlgebra.Matrix{System.Double},MathNet.Numerics.LinearAlgebra.Matrix{System.Double}@,MathNet.Numerics.LinearAlgebra.Matrix{System.Double}@)
+  name: ComputeSignFlip(Svd<double>, Matrix<double>, out Matrix<double>, out Matrix<double>)
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_ComputeSignFlip_MathNet_Numerics_LinearAlgebra_Factorization_Svd_System_Double__MathNet_Numerics_LinearAlgebra_Matrix_System_Double__MathNet_Numerics_LinearAlgebra_Matrix_System_Double___MathNet_Numerics_LinearAlgebra_Matrix_System_Double___
+  commentId: M:SharpMiner.MatrixHelper.ComputeSignFlip(MathNet.Numerics.LinearAlgebra.Factorization.Svd{System.Double},MathNet.Numerics.LinearAlgebra.Matrix{System.Double},MathNet.Numerics.LinearAlgebra.Matrix{System.Double}@,MathNet.Numerics.LinearAlgebra.Matrix{System.Double}@)
+  name.vb: ComputeSignFlip(Svd(Of Double), Matrix(Of Double), Matrix(Of Double), Matrix(Of Double))
+  fullName: SharpMiner.MatrixHelper.ComputeSignFlip(MathNet.Numerics.LinearAlgebra.Factorization.Svd<double>, MathNet.Numerics.LinearAlgebra.Matrix<double>, out MathNet.Numerics.LinearAlgebra.Matrix<double>, out MathNet.Numerics.LinearAlgebra.Matrix<double>)
+  fullName.vb: SharpMiner.MatrixHelper.ComputeSignFlip(MathNet.Numerics.LinearAlgebra.Factorization.Svd(Of Double), MathNet.Numerics.LinearAlgebra.Matrix(Of Double), MathNet.Numerics.LinearAlgebra.Matrix(Of Double), MathNet.Numerics.LinearAlgebra.Matrix(Of Double))
+  nameWithType: MatrixHelper.ComputeSignFlip(Svd<double>, Matrix<double>, out Matrix<double>, out Matrix<double>)
+  nameWithType.vb: MatrixHelper.ComputeSignFlip(Svd(Of Double), Matrix(Of Double), Matrix(Of Double), Matrix(Of Double))
+- uid: SharpMiner.MatrixHelper.ComputeSignFlip*
+  name: ComputeSignFlip
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_ComputeSignFlip_
+  commentId: Overload:SharpMiner.MatrixHelper.ComputeSignFlip
+  isSpec: "True"
+  fullName: SharpMiner.MatrixHelper.ComputeSignFlip
+  nameWithType: MatrixHelper.ComputeSignFlip
+- uid: SharpMiner.MatrixHelper.GetWeighedMatrix(MathNet.Numerics.LinearAlgebra.Matrix{System.Double},MathNet.Numerics.LinearAlgebra.Vector{System.Double},MathNet.Numerics.LinearAlgebra.Vector{System.Double})
+  name: GetWeighedMatrix(Matrix<double>, Vector<double>, Vector<double>)
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_GetWeighedMatrix_MathNet_Numerics_LinearAlgebra_Matrix_System_Double__MathNet_Numerics_LinearAlgebra_Vector_System_Double__MathNet_Numerics_LinearAlgebra_Vector_System_Double__
+  commentId: M:SharpMiner.MatrixHelper.GetWeighedMatrix(MathNet.Numerics.LinearAlgebra.Matrix{System.Double},MathNet.Numerics.LinearAlgebra.Vector{System.Double},MathNet.Numerics.LinearAlgebra.Vector{System.Double})
+  name.vb: GetWeighedMatrix(Matrix(Of Double), Vector(Of Double), Vector(Of Double))
+  fullName: SharpMiner.MatrixHelper.GetWeighedMatrix(MathNet.Numerics.LinearAlgebra.Matrix<double>, MathNet.Numerics.LinearAlgebra.Vector<double>, MathNet.Numerics.LinearAlgebra.Vector<double>)
+  fullName.vb: SharpMiner.MatrixHelper.GetWeighedMatrix(MathNet.Numerics.LinearAlgebra.Matrix(Of Double), MathNet.Numerics.LinearAlgebra.Vector(Of Double), MathNet.Numerics.LinearAlgebra.Vector(Of Double))
+  nameWithType: MatrixHelper.GetWeighedMatrix(Matrix<double>, Vector<double>, Vector<double>)
+  nameWithType.vb: MatrixHelper.GetWeighedMatrix(Matrix(Of Double), Vector(Of Double), Vector(Of Double))
+- uid: SharpMiner.MatrixHelper.GetWeighedMatrix*
+  name: GetWeighedMatrix
+  href: api/SharpMiner.MatrixHelper.html#SharpMiner_MatrixHelper_GetWeighedMatrix_
+  commentId: Overload:SharpMiner.MatrixHelper.GetWeighedMatrix
+  isSpec: "True"
+  fullName: SharpMiner.MatrixHelper.GetWeighedMatrix
+  nameWithType: MatrixHelper.GetWeighedMatrix
+- uid: SharpMiner.PrincipalComponentAnalysis
+  name: PrincipalComponentAnalysis
+  href: api/SharpMiner.PrincipalComponentAnalysis.html
+  commentId: T:SharpMiner.PrincipalComponentAnalysis
+  fullName: SharpMiner.PrincipalComponentAnalysis
+  nameWithType: PrincipalComponentAnalysis
+- uid: SharpMiner.PrincipalComponentAnalysis.#ctor(SharpMiner.Specs)
+  name: PrincipalComponentAnalysis(Specs)
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis__ctor_SharpMiner_Specs_
+  commentId: M:SharpMiner.PrincipalComponentAnalysis.#ctor(SharpMiner.Specs)
+  name.vb: New(Specs)
+  fullName: SharpMiner.PrincipalComponentAnalysis.PrincipalComponentAnalysis(SharpMiner.Specs)
+  fullName.vb: SharpMiner.PrincipalComponentAnalysis.New(SharpMiner.Specs)
+  nameWithType: PrincipalComponentAnalysis.PrincipalComponentAnalysis(Specs)
+  nameWithType.vb: PrincipalComponentAnalysis.New(Specs)
+- uid: SharpMiner.PrincipalComponentAnalysis.#ctor*
+  name: PrincipalComponentAnalysis
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis__ctor_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: SharpMiner.PrincipalComponentAnalysis.PrincipalComponentAnalysis
+  fullName.vb: SharpMiner.PrincipalComponentAnalysis.New
+  nameWithType: PrincipalComponentAnalysis.PrincipalComponentAnalysis
+  nameWithType.vb: PrincipalComponentAnalysis.New
+- uid: SharpMiner.PrincipalComponentAnalysis.ColumnsResults
+  name: ColumnsResults
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_ColumnsResults
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.ColumnsResults
+  fullName: SharpMiner.PrincipalComponentAnalysis.ColumnsResults
+  nameWithType: PrincipalComponentAnalysis.ColumnsResults
+- uid: SharpMiner.PrincipalComponentAnalysis.ColumnsResults*
+  name: ColumnsResults
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_ColumnsResults_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.ColumnsResults
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.ColumnsResults
+  nameWithType: PrincipalComponentAnalysis.ColumnsResults
+- uid: SharpMiner.PrincipalComponentAnalysis.Components
+  name: Components
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_Components
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.Components
+  fullName: SharpMiner.PrincipalComponentAnalysis.Components
+  nameWithType: PrincipalComponentAnalysis.Components
+- uid: SharpMiner.PrincipalComponentAnalysis.Components*
+  name: Components
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_Components_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.Components
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.Components
+  nameWithType: PrincipalComponentAnalysis.Components
+- uid: SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance
+  name: CumulativeExplainedVariance
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_CumulativeExplainedVariance
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance
+  fullName: SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance
+  nameWithType: PrincipalComponentAnalysis.CumulativeExplainedVariance
+- uid: SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance*
+  name: CumulativeExplainedVariance
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_CumulativeExplainedVariance_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.CumulativeExplainedVariance
+  nameWithType: PrincipalComponentAnalysis.CumulativeExplainedVariance
+- uid: SharpMiner.PrincipalComponentAnalysis.ExplainedVariance
+  name: ExplainedVariance
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_ExplainedVariance
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.ExplainedVariance
+  fullName: SharpMiner.PrincipalComponentAnalysis.ExplainedVariance
+  nameWithType: PrincipalComponentAnalysis.ExplainedVariance
+- uid: SharpMiner.PrincipalComponentAnalysis.ExplainedVariance*
+  name: ExplainedVariance
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_ExplainedVariance_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.ExplainedVariance
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.ExplainedVariance
+  nameWithType: PrincipalComponentAnalysis.ExplainedVariance
+- uid: SharpMiner.PrincipalComponentAnalysis.RowsResults
+  name: RowsResults
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_RowsResults
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.RowsResults
+  fullName: SharpMiner.PrincipalComponentAnalysis.RowsResults
+  nameWithType: PrincipalComponentAnalysis.RowsResults
+- uid: SharpMiner.PrincipalComponentAnalysis.RowsResults*
+  name: RowsResults
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_RowsResults_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.RowsResults
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.RowsResults
+  nameWithType: PrincipalComponentAnalysis.RowsResults
+- uid: SharpMiner.PrincipalComponentAnalysis.Svd
+  name: Svd
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_Svd
+  commentId: P:SharpMiner.PrincipalComponentAnalysis.Svd
+  fullName: SharpMiner.PrincipalComponentAnalysis.Svd
+  nameWithType: PrincipalComponentAnalysis.Svd
+- uid: SharpMiner.PrincipalComponentAnalysis.Svd*
+  name: Svd
+  href: api/SharpMiner.PrincipalComponentAnalysis.html#SharpMiner_PrincipalComponentAnalysis_Svd_
+  commentId: Overload:SharpMiner.PrincipalComponentAnalysis.Svd
+  isSpec: "True"
+  fullName: SharpMiner.PrincipalComponentAnalysis.Svd
+  nameWithType: PrincipalComponentAnalysis.Svd
+- uid: SharpMiner.Specs
+  name: Specs
+  href: api/SharpMiner.Specs.html
+  commentId: T:SharpMiner.Specs
+  fullName: SharpMiner.Specs
+  nameWithType: Specs
+- uid: SharpMiner.Specs.#ctor(SharpMiner.FactorMethod,System.Int32,MathNet.Numerics.LinearAlgebra.Matrix{System.Double},System.Double[],System.Double[],System.Boolean)
+  name: Specs(FactorMethod, int, Matrix<double>, double[], double[], bool)
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs__ctor_SharpMiner_FactorMethod_System_Int32_MathNet_Numerics_LinearAlgebra_Matrix_System_Double__System_Double___System_Double___System_Boolean_
+  commentId: M:SharpMiner.Specs.#ctor(SharpMiner.FactorMethod,System.Int32,MathNet.Numerics.LinearAlgebra.Matrix{System.Double},System.Double[],System.Double[],System.Boolean)
+  name.vb: New(FactorMethod, Integer, Matrix(Of Double), Double(), Double(), Boolean)
+  fullName: SharpMiner.Specs.Specs(SharpMiner.FactorMethod, int, MathNet.Numerics.LinearAlgebra.Matrix<double>, double[], double[], bool)
+  fullName.vb: SharpMiner.Specs.New(SharpMiner.FactorMethod, Integer, MathNet.Numerics.LinearAlgebra.Matrix(Of Double), Double(), Double(), Boolean)
+  nameWithType: Specs.Specs(FactorMethod, int, Matrix<double>, double[], double[], bool)
+  nameWithType.vb: Specs.New(FactorMethod, Integer, Matrix(Of Double), Double(), Double(), Boolean)
+- uid: SharpMiner.Specs.#ctor*
+  name: Specs
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs__ctor_
+  commentId: Overload:SharpMiner.Specs.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: SharpMiner.Specs.Specs
+  fullName.vb: SharpMiner.Specs.New
+  nameWithType: Specs.Specs
+  nameWithType.vb: Specs.New
+- uid: SharpMiner.Specs.CenteredAndScaledData
+  name: CenteredAndScaledData
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_CenteredAndScaledData
+  commentId: P:SharpMiner.Specs.CenteredAndScaledData
+  fullName: SharpMiner.Specs.CenteredAndScaledData
+  nameWithType: Specs.CenteredAndScaledData
+- uid: SharpMiner.Specs.CenteredAndScaledData*
+  name: CenteredAndScaledData
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_CenteredAndScaledData_
+  commentId: Overload:SharpMiner.Specs.CenteredAndScaledData
+  isSpec: "True"
+  fullName: SharpMiner.Specs.CenteredAndScaledData
+  nameWithType: Specs.CenteredAndScaledData
+- uid: SharpMiner.Specs.ColumnsWeights
+  name: ColumnsWeights
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_ColumnsWeights
+  commentId: P:SharpMiner.Specs.ColumnsWeights
+  fullName: SharpMiner.Specs.ColumnsWeights
+  nameWithType: Specs.ColumnsWeights
+- uid: SharpMiner.Specs.ColumnsWeights*
+  name: ColumnsWeights
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_ColumnsWeights_
+  commentId: Overload:SharpMiner.Specs.ColumnsWeights
+  isSpec: "True"
+  fullName: SharpMiner.Specs.ColumnsWeights
+  nameWithType: Specs.ColumnsWeights
+- uid: SharpMiner.Specs.DataSet
+  name: DataSet
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_DataSet
+  commentId: P:SharpMiner.Specs.DataSet
+  fullName: SharpMiner.Specs.DataSet
+  nameWithType: Specs.DataSet
+- uid: SharpMiner.Specs.DataSet*
+  name: DataSet
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_DataSet_
+  commentId: Overload:SharpMiner.Specs.DataSet
+  isSpec: "True"
+  fullName: SharpMiner.Specs.DataSet
+  nameWithType: Specs.DataSet
+- uid: SharpMiner.Specs.FactorMethod
+  name: FactorMethod
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_FactorMethod
+  commentId: P:SharpMiner.Specs.FactorMethod
+  fullName: SharpMiner.Specs.FactorMethod
+  nameWithType: Specs.FactorMethod
+- uid: SharpMiner.Specs.FactorMethod*
+  name: FactorMethod
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_FactorMethod_
+  commentId: Overload:SharpMiner.Specs.FactorMethod
+  isSpec: "True"
+  fullName: SharpMiner.Specs.FactorMethod
+  nameWithType: Specs.FactorMethod
+- uid: SharpMiner.Specs.IsCenteredAndScaled
+  name: IsCenteredAndScaled
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_IsCenteredAndScaled
+  commentId: P:SharpMiner.Specs.IsCenteredAndScaled
+  fullName: SharpMiner.Specs.IsCenteredAndScaled
+  nameWithType: Specs.IsCenteredAndScaled
+- uid: SharpMiner.Specs.IsCenteredAndScaled*
+  name: IsCenteredAndScaled
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_IsCenteredAndScaled_
+  commentId: Overload:SharpMiner.Specs.IsCenteredAndScaled
+  isSpec: "True"
+  fullName: SharpMiner.Specs.IsCenteredAndScaled
+  nameWithType: Specs.IsCenteredAndScaled
+- uid: SharpMiner.Specs.NumberOfComponents
+  name: NumberOfComponents
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_NumberOfComponents
+  commentId: P:SharpMiner.Specs.NumberOfComponents
+  fullName: SharpMiner.Specs.NumberOfComponents
+  nameWithType: Specs.NumberOfComponents
+- uid: SharpMiner.Specs.NumberOfComponents*
+  name: NumberOfComponents
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_NumberOfComponents_
+  commentId: Overload:SharpMiner.Specs.NumberOfComponents
+  isSpec: "True"
+  fullName: SharpMiner.Specs.NumberOfComponents
+  nameWithType: Specs.NumberOfComponents
+- uid: SharpMiner.Specs.RowsWeights
+  name: RowsWeights
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_RowsWeights
+  commentId: P:SharpMiner.Specs.RowsWeights
+  fullName: SharpMiner.Specs.RowsWeights
+  nameWithType: Specs.RowsWeights
+- uid: SharpMiner.Specs.RowsWeights*
+  name: RowsWeights
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_RowsWeights_
+  commentId: Overload:SharpMiner.Specs.RowsWeights
+  isSpec: "True"
+  fullName: SharpMiner.Specs.RowsWeights
+  nameWithType: Specs.RowsWeights
+- uid: SharpMiner.Specs.WeighedMatrix
+  name: WeighedMatrix
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_WeighedMatrix
+  commentId: P:SharpMiner.Specs.WeighedMatrix
+  fullName: SharpMiner.Specs.WeighedMatrix
+  nameWithType: Specs.WeighedMatrix
+- uid: SharpMiner.Specs.WeighedMatrix*
+  name: WeighedMatrix
+  href: api/SharpMiner.Specs.html#SharpMiner_Specs_WeighedMatrix_
+  commentId: Overload:SharpMiner.Specs.WeighedMatrix
+  isSpec: "True"
+  fullName: SharpMiner.Specs.WeighedMatrix
+  nameWithType: Specs.WeighedMatrix
