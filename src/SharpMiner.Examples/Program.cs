@@ -21,6 +21,8 @@ DataTable indicators_mixed_online = DataSetLoader.LoadDataTableCsvFromRemoteFile
 DataTable indicators_mixed_local = DataSetLoader.LoadDataTableFromCsvFile(indicator_mixed, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol);
 DataTable indicators_headless_local = DataSetLoader.LoadDataTableFromCsvFile(indicator_headless, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol, hasHeaders: false);
 
+var matrix = indicators_mixed_local.ConvertToMatrix();
+
 
 if (data != null)
 {

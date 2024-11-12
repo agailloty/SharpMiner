@@ -10,6 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace SharpMiner
 {
@@ -389,6 +390,32 @@ namespace SharpMiner
             {
                 dataTable.Rows[i][columnName] = encoding[values[i]];
             }
+        }
+        /// <summary>
+        /// Converts a DataTable to a Matrix of doubles.
+        /// </summary>
+        /// <param name="dataTable">The DataTable to convert.</param>
+        /// <returns>A Matrix of doubles representing the data in the DataTable.</returns>
+        public static Matrix<double> ConvertToMatrix(this DataTable dataTable) 
+        {
+            // Remove non-numeric columns
+            var numericColumns = dataTable.Columns.Cast<DataColumn>()
+            .Where(col => col.DataType == typeof(double) || col.DataType == typeof(int))
+            .ToList();
+
+            var rows = dataTable.Rows.Count;
+            var cols = numericColumns.Count;
+            var matrix = new DenseMatrix(rows, cols);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    matrix[i, j] = Convert.ToDouble(dataTable.Rows[i][numericColumns[j]]);
+                }
+            }
+
+            return matrix;
         }
     }
 }
