@@ -15,12 +15,12 @@ namespace SharpMiner
         /// <param name="coordinates"></param>
         /// <param name="squaredCosinus"></param>
         /// <param name="contributions"></param>
-        internal FactorResults(Vector<double> explainedVariance, 
+        internal FactorResults(Vector<double> explainedVariance,
                                 Vector<double> cumulativeExplainedVariance,
-                                Matrix<double> coordinates, 
-                                Matrix<double> squaredCosinus, 
-                                Matrix<double> contributions) 
-        { 
+                                Matrix<double> coordinates,
+                                Matrix<double> squaredCosinus,
+                                Matrix<double> contributions)
+        {
             Coordinates = coordinates;
             SquaredCosinus = squaredCosinus;
             Contributions = contributions;

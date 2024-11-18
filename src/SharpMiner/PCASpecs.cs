@@ -4,6 +4,8 @@ using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
 
+using static SharpMiner.Constants;
+
 namespace SharpMiner
 {
     /// <summary>
@@ -44,7 +46,7 @@ namespace SharpMiner
             var columnName = Enumerable.Range(0, columnCount)
                                                 .Select(i => dataSet.Columns[i].ColumnName).ToArray();
 
-            string[] oneHotColumns = columnName.Where(c => c.Contains("||")).ToArray();
+            string[] oneHotColumns = columnName.Where(c => c.Contains(modalityDelimiter)).ToArray();
 
             dataSet.Clear();
         }

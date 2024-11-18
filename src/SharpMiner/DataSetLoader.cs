@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra.Double;
+using static SharpMiner.Constants;
 
 namespace SharpMiner
 {
@@ -17,7 +18,6 @@ namespace SharpMiner
     /// </summary>
     public static class DataSetLoader
     {
-        private const string modalityDelimiter = "||";
         /// <summary>
         /// Reads a dataset from a CSV file.
         /// </summary>
@@ -94,8 +94,16 @@ namespace SharpMiner
                     var row = ParseCsvLine(reader.ReadLine(), delimiter);
                     allRows.Add(row);
                 }
+                short typeInferenceRows;
+                if (allRows.Count * 0.2 > maximumGuessLines)
+                {
+                    typeInferenceRows = maximumGuessLines;
+                }
+                else
+                {
+                    typeInferenceRows = (short)(allRows.Count * 0.2);
+                }
 
-                int typeInferenceRows = (int)(allRows.Count * 0.2);
                 sampleRows.AddRange(allRows.Take(typeInferenceRows));
 
                 InferColumnTypes(dataTable, sampleRows, numberProvider);
