@@ -15,18 +15,12 @@ string indicator_mixed_url = "https://raw.githubusercontent.com/agailloty/Outils
 string[] oneHotColumns = { "REGION", "INCOME_GROUP" };
 string[] labelEncodedCol = { "COUNTRY" };
 
-var indicators_mixed_remote = DataSetLoader.LoadCsvFromRemoteFile(indicator_mixed_url, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol);
-var indicators_headless_remote = DataSetLoader.LoadCsvFromRemoteFile(indicator_headless, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol, hasHeaders: false);
-var indicators_headless_local = DataSetLoader.LoadFromCsvFile(indicator_headless, oneHotEncodedColumns : oneHotColumns, labelEncodedColumns : labelEncodedCol, hasHeaders: false);
+var data = DataSetLoader.ReadDataTable(indicator_mixed_url, oneHotEncodedColumns: oneHotColumns, labelEncodedColumns: labelEncodedCol);
 
-
-var data = indicators_mixed_remote;
 
 if (data != null)
 {
-    var specs = new Specs(factorMethod: FactorMethod.PCA, 
-                                numberOfComponents : 5,
-                                dataSet: data);
+    var specs = new PCASpecs(numberOfComponents : 5, dataSet: data);
 
     var corepca = new PrincipalComponentAnalysis(specs);
 

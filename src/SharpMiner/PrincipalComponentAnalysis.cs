@@ -12,7 +12,7 @@ namespace SharpMiner
     /// </summary>
     public class PrincipalComponentAnalysis
     {
-        private readonly Specs _spec;
+        private readonly PCASpecs _spec;
         private FactorResults _rowResults;
         private FactorResults _columnResults;
         private double[] _explainedVariance;
@@ -23,7 +23,7 @@ namespace SharpMiner
         /// Initialize and compute PCA using SVD
         /// </summary>
         /// <param name="specs"></param>
-        public PrincipalComponentAnalysis(Specs specs)
+        public PrincipalComponentAnalysis(PCASpecs specs)
         {
             _spec = specs;
             ComputePrincipalComponentsUsingSvd();

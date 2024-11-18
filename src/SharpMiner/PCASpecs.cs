@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
 
@@ -7,7 +9,7 @@ namespace SharpMiner
     /// <summary>
     /// This class is used to parameterize a Computation
     /// </summary>
-    public class Specs
+    public class PCASpecs
     {
         private double[] _rowsWeights;
         private double[] _columnsWeights;
@@ -17,38 +19,40 @@ namespace SharpMiner
         /// <summary>
         /// Initialize a specification for computation
         /// </summary>
-        /// <param name="factorMethod"></param>
         /// <param name="numberOfComponents"></param>
         /// <param name="dataSet"></param>
         /// <param name="rowsWeights"></param>
         /// <param name="columnWeights"></param>
         /// <param name="centeredAndScale"></param>
-        public Specs(FactorMethod factorMethod, int numberOfComponents, Matrix<double> dataSet, double[] rowsWeights = null, 
+        public PCASpecs(int numberOfComponents, DataTable dataSet, double[] rowsWeights = null,
                         double[] columnWeights = null,
                         bool centeredAndScale = true) 
         {
-            FactorMethod = factorMethod;
-            DataSet = dataSet;
+            DataSet = dataSet.ConvertToMatrix();
             RowsWeights = rowsWeights;
             ColumnsWeights = columnWeights;
             NumberOfComponents = numberOfComponents;
             IsCenteredAndScaled = centeredAndScale;
             if (centeredAndScale)
             {
-                var centeredScaledMatrix = MatrixHelper.CenterAndScale(dataSet);
+                var centeredScaledMatrix = MatrixHelper.CenterAndScale(DataSet);
                 _centeredAndScaledData = centeredScaledMatrix;
-                WeighedMatrix = dataSet.MapIndexed((i, j, value) => value * Math.Sqrt(ColumnsWeights[j]) * Math.Sqrt(RowsWeights[i]));
+                WeighedMatrix = DataSet.MapIndexed((i, j, value) => value * Math.Sqrt(ColumnsWeights[j]) * Math.Sqrt(RowsWeights[i]));
             }
+
+            int columnCount = dataSet.Columns.Count;
+            var columnName = Enumerable.Range(0, columnCount)
+                                                .Select(i => dataSet.Columns[i].ColumnName).ToArray();
+
+            string[] oneHotColumns = columnName.Where(c => c.Contains("||")).ToArray();
+
+            dataSet.Clear();
         }
 
         /// <summary>
-        /// Specify which factor analysis method to use
-        /// </summary>
-        public FactorMethod FactorMethod { get; set; }
-        /// <summary>
         /// Specify the dataset on which the factor analysis method is to be computed
         /// </summary>
-        public Matrix<double> DataSet { get; set; }
+        public Matrix<double> DataSet { get; }
 
         /// <summary>
         /// Represents the weighted matrix in a Principal Component Analysis (PCA),

@@ -4,8 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 
-using MathNet.Numerics.Data.Text;
-
 using MathNet.Numerics.LinearAlgebra;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -19,6 +17,33 @@ namespace SharpMiner
     /// </summary>
     public static class DataSetLoader
     {
+        private const string modalityDelimiter = "||";
+        /// <summary>
+        /// Reads a dataset from a CSV file.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="hasHeaders"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="numberProvider"></param>
+        /// <param name="oneHotEncodedColumns"></param>
+        /// <param name="labelEncodedColumns"></param>
+        /// <returns></returns>
+        public static DataTable ReadDataTable(string fileName,
+                                                 bool hasHeaders = true,
+                                                 string delimiter = ",",
+                                                 NumberFormatInfo numberProvider = null,
+                                                 string[] oneHotEncodedColumns = null, string[] labelEncodedColumns = null)
+        {
+            if (Uri.IsWellFormedUriString(fileName, UriKind.Absolute))
+            {
+                return LoadDataTableCsvFromRemoteFile(fileName, hasHeaders, delimiter, numberProvider, oneHotEncodedColumns, labelEncodedColumns);
+            }
+            else
+            {
+                return LoadDataTableFromCsvFile(fileName, hasHeaders, delimiter, numberProvider, oneHotEncodedColumns, labelEncodedColumns);
+            }
+        }
+
         /// <summary>
         /// Loads a DataTable from a CSV file.
         /// </summary>
@@ -29,7 +54,7 @@ namespace SharpMiner
         /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
         /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A DataTable containing the data from the remote CSV file.</returns>
-        public static DataTable LoadDataTableFromCsvFile(string fileName,
+        internal static DataTable LoadDataTableFromCsvFile(string fileName,
                                                  bool hasHeaders = true,
                                                  string delimiter = ",",
                                                  NumberFormatInfo numberProvider = null,
@@ -131,7 +156,7 @@ namespace SharpMiner
         /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
         /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A DataTable containing the data from the remote CSV file.</returns>
-        public static DataTable LoadDataTableCsvFromRemoteFile(string url,
+        internal static DataTable LoadDataTableCsvFromRemoteFile(string url,
                                                                bool hasHeaders = true,
                                                                string delimiter = ",",
                                                                NumberFormatInfo numberProvider = null, 
@@ -292,7 +317,7 @@ namespace SharpMiner
         /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
         /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A Matrix containing the data from the CSV file.</returns>
-        public static Matrix<double> LoadFromCsvFile(string fileName,
+        internal static Matrix<double> LoadFromCsvFile(string fileName,
                                                  bool hasHeaders = true,
                                                  string delimiter = ",",
                                                  NumberFormatInfo numberProvider = null,
@@ -312,7 +337,7 @@ namespace SharpMiner
         /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
         /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A Matrix containing the data from the remote CSV file.</returns>
-        public static Matrix<double> LoadCsvFromRemoteFile(string url,
+        internal static Matrix<double> LoadCsvFromRemoteFile(string url,
                                                                bool hasHeaders = true,
                                                                string delimiter = ",",
                                                                NumberFormatInfo numberProvider = null,
@@ -333,11 +358,9 @@ namespace SharpMiner
 
             string[] uniqueValues = values.Distinct().ToArray();
 
-            List<int[]> encodedColumns = new List<int[]>();
-
             foreach (string modality in uniqueValues)
             {
-                string modalityName = column.ColumnName + "_" + modality;
+                string modalityName = column.ColumnName + modalityDelimiter + modality;
                 dataTable.Columns.Add(modalityName, typeof(int));
 
                 for (int i = 0; i < dataTable.Rows.Count; i++)
