@@ -33,8 +33,7 @@ namespace SharpMiner
                                                  bool hasHeaders = true,
                                                  string delimiter = ",",
                                                  NumberFormatInfo numberProvider = null,
-                                                 string[] oneHotEncodedColumns = null,
-                                                 string[] labelEncodedColumns = null)
+                                                 string[] oneHotEncodedColumns = null, string[] labelEncodedColumns = null)
         {
             if (numberProvider == null)
             {
@@ -290,51 +289,37 @@ namespace SharpMiner
         /// <param name="numberProvider">The number format provider.</param>
         /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
         /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
+        /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A Matrix containing the data from the CSV file.</returns>
         public static Matrix<double> LoadFromCsvFile(string fileName,
-                                                     NumberFormatInfo numberProvider = null,
-                                                     bool hasHeaders = true,
-                                                     string delimiter = ",")
+                                                 bool hasHeaders = true,
+                                                 string delimiter = ",",
+                                                 NumberFormatInfo numberProvider = null,
+                                                 string[] oneHotEncodedColumns = null, string[] labelEncodedColumns = null)
         {
-            if (numberProvider == null)
-            {
-                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            }
-
-            Matrix<double> data = DelimitedReader.Read<double>(filePath: fileName, delimiter: delimiter, formatProvider: numberProvider, hasHeaders: hasHeaders);
-
-            return data;
+            DataTable dataset = LoadDataTableFromCsvFile(fileName, hasHeaders, delimiter, numberProvider, oneHotEncodedColumns, labelEncodedColumns);
+            return dataset.ConvertToMatrix();
         }
 
         /// <summary>
-        /// Creates a dataset instance from a remote CSV file.
+        /// Loads a Matrix from a remote CSV file.
         /// </summary>
         /// <param name="url">The URL of the remote CSV file.</param>
-        /// <param name="numberProvider">The number format provider.</param>
         /// <param name="hasHeaders">Indicates if the CSV file has headers.</param>
         /// <param name="delimiter">The delimiter used in the CSV file.</param>
+        /// <param name="numberProvider">The number format provider.</param>
+        /// <param name="oneHotEncodedColumns">Columns that need to be one hot encoded.</param>
+        /// <param name="labelEncodedColumns">Columns that need to be label encoded.</param>
         /// <returns>A Matrix containing the data from the remote CSV file.</returns>
         public static Matrix<double> LoadCsvFromRemoteFile(string url,
-                                                     NumberFormatInfo numberProvider = null,
-                                                     bool hasHeaders = true,
-                                                     string delimiter = ",")
+                                                               bool hasHeaders = true,
+                                                               string delimiter = ",",
+                                                               NumberFormatInfo numberProvider = null,
+                                                               string[] oneHotEncodedColumns = null, string[] labelEncodedColumns = null)
         {
-            if (numberProvider == null)
-            {
-                numberProvider = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            }
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = client.GetAsync(url).Result;
-                response.EnsureSuccessStatusCode();
-                string csvContent = response.Content.ReadAsStringAsync().Result;
-
-                using (var reader = new StringReader(csvContent))
-                {
-                    var data = DelimitedReader.Read<double>(reader, delimiter: delimiter, hasHeaders: hasHeaders, formatProvider: numberProvider);
-                    return data;
-                }
-            }
+            DataTable dataset = LoadDataTableCsvFromRemoteFile(url, hasHeaders, delimiter, numberProvider, oneHotEncodedColumns, labelEncodedColumns);
+            return dataset.ConvertToMatrix();
         }
 
         private static void CreateOneHotEncodedColumns(DataTable dataTable, DataColumn column)
@@ -396,7 +381,7 @@ namespace SharpMiner
         /// </summary>
         /// <param name="dataTable">The DataTable to convert.</param>
         /// <returns>A Matrix of doubles representing the data in the DataTable.</returns>
-        public static Matrix<double> ConvertToMatrix(this DataTable dataTable) 
+        internal static Matrix<double> ConvertToMatrix(this DataTable dataTable) 
         {
             // Remove non-numeric columns
             var numericColumns = dataTable.Columns.Cast<DataColumn>()
