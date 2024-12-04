@@ -31,12 +31,9 @@ if (data != null)
 
     var pca = new PrincipalComponentAnalysis(specs);
 
-    PrintResults(pca);
 
-    Console.ReadLine();
-
-    var plot = Visualisations.ScreePlot(corepca.ExplainedVariance);
-    plot.SavePng("scrreplot.png", 800, 600);
+    corepca.ScreePlot().SavePng("screeplot.png", 250, 250); 
+    corepca.CorrelationCircle().SavePng("correlation.png", 800, 800);
 
 
 }
